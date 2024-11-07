@@ -1,14 +1,14 @@
 {
-  "name": "coreui-free-angular-admin-template",
-  "version": "5.2.22",
-  "copyright": "Copyright 2024 creativeLabs Łukasz Holeczek",
+  "name": "autodevops-data-portal",
+  "version": "0.0.1",
+  "copyright": "Copyright 2024 AutoDevOpsInc",
   "license": "MIT",
-  "author": "The CoreUI Team (https://github.com/orgs/coreui/people) and contributors",
-  "homepage": "https://coreui.io/angular",
+  "author": "The AutoDevOps Team (https://github.com/orgs/autodevops-in/people) and contributors",
+  "homepage": "https://autodevops.in",
   "config": {
     "theme": "default",
     "coreui_library_short_version": "5.2",
-    "coreui_library_docs_url": "https://coreui.io/angular/docs/"
+    "coreui_library_docs_url": "https://docs.autodevops.in"
   },
   "scripts": {
     "ng": "ng",
@@ -29,12 +29,11 @@
     "@angular/platform-browser": "^18.2.9",
     "@angular/platform-browser-dynamic": "^18.2.9",
     "@angular/router": "^18.2.9",
+    "@auth0/auth0-angular": "^2.2.3",
     "@coreui/angular": "~5.2.22",
     "@coreui/angular-chartjs": "~5.2.22",
     "@coreui/chartjs": "~4.0.0",
     "@coreui/coreui": "~5.2.0",
-    "@coreui/icons": "^3.0.1",
-    "@coreui/icons-angular": "~5.2.22",
     "@coreui/utils": "^2.0.2",
     "chart.js": "^4.4.6",
     "lodash-es": "^4.17.21",

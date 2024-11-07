@@ -47,6 +47,7 @@
 
     <c-header-nav class="mx-0">
       <ng-container *ngTemplateOutlet="userDropdown" />
+      <ng-container *ngTemplateOutlet="userLoginDropdown"/>
     </c-header-nav>
 
   </c-container>
@@ -55,9 +56,13 @@
   </c-container>
 </ng-container>
 <!--</c-header>-->
-
+<ng-template #userLoginDropdown>
+  <c-dropdown *ngIf="(auth.isAuthenticated$ | async) === false" [popperOptions]="{ placement: 'bottom-start' }" variant="nav-item">
+      <button (click)="auth.loginWithRedirect()" cButton color="primary" size="sm">Login/Signup</button>
+    </c-dropdown>
+</ng-template>
 <ng-template #userDropdown>
-  <c-dropdown [popperOptions]="{ placement: 'bottom-start' }" variant="nav-item">
+  <c-dropdown *ngIf="(auth.isAuthenticated$ | async)" [popperOptions]="{ placement: 'bottom-start' }" variant="nav-item">
     <button [caret]="false" cDropdownToggle class="py-0 pe-0" aria-label="Open user menu">
       <c-avatar
         shape="rounded-1"
@@ -71,7 +76,7 @@
     <ul cDropdownMenu class="pt-0 w-auto">
       <li>
         <h6 cDropdownHeader class="bg-body-secondary text-body-secondary fw-semibold py-2 rounded-top">
-          Account
+          {{auth.isAuthenticated$ | async}}
         </h6>
       </li>
       <li>
@@ -150,9 +155,9 @@
         </a>
       </li>
       <li>
-        <a cDropdownItem routerLink="">
-          <svg cIcon class="me-2" name="cilAccountLogout"></svg>
-          Logout
+        <a (click)="auth.logout({ logoutParams: { returnTo: document.location.origin } })" cDropdownItem routerLink="">
+          <svg  cIcon class="me-2" name="cilAccountLogout"></svg>
+          LogOut
         </a>
       </li>
     </ul>
