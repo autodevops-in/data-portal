@@ -52,6 +52,13 @@ export const routes: Routes = [
         loadChildren: () => import('./views/charts/routes').then((m) => m.routes)
       },
       {
+        path: 'Profile',
+        loadComponent: () => import('./views/profile/profile.component').then(m => m.ProfileComponent),
+        data: {
+          title: 'Profile'
+        }
+      },
+      {
         path: 'pages',
         loadChildren: () => import('./views/pages/routes').then((m) => m.routes)
       }

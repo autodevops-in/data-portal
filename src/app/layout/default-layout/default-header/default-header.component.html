@@ -64,11 +64,10 @@
 <ng-template #userDropdown>
   <c-dropdown *ngIf="(auth.isAuthenticated$ | async)" [popperOptions]="{ placement: 'bottom-start' }" variant="nav-item">
     <button [caret]="false" cDropdownToggle class="py-0 pe-0" aria-label="Open user menu">
-      <c-avatar
+      <c-avatar *ngIf="auth.user$ | async as user"
         shape="rounded-1"
         [size]="'md'"
-        src="./assets/images/avatars/8.jpg"
-        status="success"
+        src="{{user.picture}}"
         textColor="primary"
         alt="User avatar"
       />
@@ -76,7 +75,7 @@
     <ul cDropdownMenu class="pt-0 w-auto">
       <li>
         <h6 cDropdownHeader class="bg-body-secondary text-body-secondary fw-semibold py-2 rounded-top">
-          {{auth.isAuthenticated$ | async}}
+          Account
         </h6>
       </li>
       <li>

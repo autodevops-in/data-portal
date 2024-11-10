@@ -12,6 +12,7 @@ import { provideAuth0 } from '@auth0/auth0-angular';
 import { DropdownModule, SidebarModule } from '@coreui/angular';
 import { IconSetService } from '@coreui/icons-angular';
 import { routes } from './app.routes';
+import { environment } from '../environments/environment'
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -31,8 +32,8 @@ export const appConfig: ApplicationConfig = {
     IconSetService,
     provideAnimations(),
     provideAuth0({
-      domain: 'auth.autodevops.in',
-      clientId: 'afpO6pFmrC0SW8Ni8uLc0owwzXyQDrnd',
+      domain: environment.domain,
+      clientId: environment.clientId,
       authorizationParams: {
         redirect_uri: window.location.origin
       }
