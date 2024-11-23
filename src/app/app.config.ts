@@ -8,12 +8,14 @@ import {
   withRouterConfig,
   withViewTransitions
 } from '@angular/router';
-import { provideAuth0 } from '@auth0/auth0-angular';
+import { provideAuth0, authHttpInterceptorFn } from '@auth0/auth0-angular';
+
 import { DropdownModule, SidebarModule } from '@coreui/angular';
 import { IconSetService } from '@coreui/icons-angular';
 import { routes } from './app.routes';
 import { environment } from '../environments/environment'
-
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { ApiServiceService } from './api-service.service';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes,
@@ -28,7 +30,9 @@ export const appConfig: ApplicationConfig = {
       withViewTransitions(),
       withHashLocation()
     ),
+    ApiServiceService,
     importProvidersFrom(SidebarModule, DropdownModule),
+    provideHttpClient(withInterceptors([authHttpInterceptorFn])),
     IconSetService,
     provideAnimations(),
     provideAuth0({
@@ -36,6 +40,9 @@ export const appConfig: ApplicationConfig = {
       clientId: environment.clientId,
       authorizationParams: {
         redirect_uri: window.location.origin
+      },
+      httpInterceptor: {
+        allowedList: [`${environment.metricsApiUrl}/api/*`]
       }
     })
   ]

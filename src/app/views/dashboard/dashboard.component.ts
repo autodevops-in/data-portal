@@ -22,7 +22,7 @@ import {
 } from '@coreui/angular';
 import { ChartjsComponent } from '@coreui/angular-chartjs';
 import { IconDirective } from '@coreui/icons-angular';
-
+import {ApiServiceService} from '../../api-service.service';
 import { WidgetsBrandComponent } from '../widgets/widgets-brand/widgets-brand.component';
 import { WidgetsDropdownComponent } from '../widgets/widgets-dropdown/widgets-dropdown.component';
 import { DashboardChartsData, IChartProps } from './dashboard-charts-data';
@@ -40,6 +40,9 @@ interface IUser {
   status: string;
   color: string;
 }
+interface Items{
+  status: string;
+}
 
 @Component({
   templateUrl: 'dashboard.component.html',
@@ -48,13 +51,13 @@ interface IUser {
   imports: [WidgetsDropdownComponent, TextColorDirective, CardComponent, CardBodyComponent, RowComponent, ColComponent, ButtonDirective, IconDirective, ReactiveFormsModule, ButtonGroupComponent, FormCheckLabelDirective, ChartjsComponent, NgStyle, CardFooterComponent, GutterDirective, ProgressBarDirective, ProgressComponent, WidgetsBrandComponent, CardHeaderComponent, TableDirective, AvatarComponent, CommonModule]
 })
 export class DashboardComponent implements OnInit {
-  constructor(public auth: AuthService){
+  constructor(public auth: AuthService, public apiService: ApiServiceService){
   }
   readonly #destroyRef: DestroyRef = inject(DestroyRef);
   readonly #document: Document = inject(DOCUMENT);
   readonly #renderer: Renderer2 = inject(Renderer2);
   readonly #chartsData: DashboardChartsData = inject(DashboardChartsData);
-
+  fetchedData: any;
   public users: IUser[] = [
     {
       name: 'Yiorgos Avraamu',
@@ -151,6 +154,9 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.initCharts();
     this.updateChartOnColorModeChange();
+    this.apiService.fetchItems().subscribe(data => {
+      this.fetchedData = data;
+    });
   }
 
   initCharts(): void {
@@ -178,7 +184,6 @@ export class DashboardComponent implements OnInit {
       unListen();
     });
   }
-
   setChartStyles() {
     if (this.mainChartRef()) {
       setTimeout(() => {
