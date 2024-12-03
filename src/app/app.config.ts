@@ -38,8 +38,11 @@ export const appConfig: ApplicationConfig = {
     provideAuth0({
       domain: environment.domain,
       clientId: environment.clientId,
+      
       authorizationParams: {
-        redirect_uri: window.location.origin
+        redirect_uri: window.location.origin,
+        audience: environment.audience,
+        scope: 'read:current_user',
       },
       httpInterceptor: {
         allowedList: [`${environment.metricsApiUrl}/api/*`]
