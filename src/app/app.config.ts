@@ -40,10 +40,13 @@ export const appConfig: ApplicationConfig = {
       clientId: environment.clientId,
       
       authorizationParams: {
+        audience: "https://metrics.api.autodevops.in",
         redirect_uri: window.location.origin
       },
       httpInterceptor: {
-        allowedList: [`${environment.metricsApiUrl}/api/*`]
+        allowedList: [{
+          uri: `${environment.metricsApiUrl}/api/*`
+        }]
       }
     })
   ]
