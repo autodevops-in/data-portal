@@ -12,7 +12,7 @@ export class ApiServiceService {
 
     constructor(private http: HttpClient) { }
 
-    fetchItems(): Observable<any[]> {
+    fetchedprojects(): Observable<any[]> {
         const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
         return this.http.get<any[]>(`${this.apiUrl}/api/items`, {headers});
     }

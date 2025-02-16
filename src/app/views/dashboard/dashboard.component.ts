@@ -57,7 +57,6 @@ export class DashboardComponent implements OnInit {
   readonly #document: Document = inject(DOCUMENT);
   readonly #renderer: Renderer2 = inject(Renderer2);
   readonly #chartsData: DashboardChartsData = inject(DashboardChartsData);
-  fetchedData: any;
   public users: IUser[] = [
     {
       name: 'Yiorgos Avraamu',
@@ -154,9 +153,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.initCharts();
     this.updateChartOnColorModeChange();
-    this.apiService.fetchItems().subscribe(data => {
-      this.fetchedData = data;
-    });
+    
   }
 
   initCharts(): void {

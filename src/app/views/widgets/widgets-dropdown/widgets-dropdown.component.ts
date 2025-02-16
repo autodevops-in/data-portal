@@ -12,7 +12,7 @@ import { ChartjsComponent } from '@coreui/angular-chartjs';
 import { RouterLink } from '@angular/router';
 import { IconDirective } from '@coreui/icons-angular';
 import { RowComponent, ColComponent, WidgetStatAComponent, TemplateIdDirective, ThemeDirective, DropdownComponent, ButtonDirective, DropdownToggleDirective, DropdownMenuDirective, DropdownItemDirective, DropdownDividerDirective } from '@coreui/angular';
-
+import { ApiServiceService } from 'src/app/api-service.service';
 
 @Component({
     selector: 'app-widgets-dropdown',
@@ -25,9 +25,10 @@ import { RowComponent, ColComponent, WidgetStatAComponent, TemplateIdDirective, 
 export class WidgetsDropdownComponent implements OnInit, AfterContentInit {
 
   constructor(
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    public apiService: ApiServiceService
   ) {}
-
+  fetchedProjectData: any;
   data: any[] = [];
   options: any[] = [];
   labels = [
@@ -126,6 +127,9 @@ export class WidgetsDropdownComponent implements OnInit, AfterContentInit {
 
   ngOnInit(): void {
     this.setData();
+    this.apiService.fetchedprojects().subscribe(data => {
+      this.fetchedProjectData = data;
+    });
   }
 
   ngAfterContentInit(): void {
