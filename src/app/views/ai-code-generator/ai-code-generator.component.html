@@ -1,0 +1,102 @@
+<div class="animated fadeIn">
+  <c-card class="mb-4">
+    <c-card-header>
+      <strong>AI Code Generator</strong>
+    </c-card-header>
+    <c-card-body>
+      <c-alert color="info" *ngIf="!isAuthenticated">
+        <strong>Authentication Required</strong>
+        <p>Please log in to use the AI code generation feature.</p>
+        <button cButton color="primary" (click)="login()">Log In</button>
+      </c-alert>
+
+      <c-alert color="danger" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </c-alert>
+
+      <form *ngIf="isAuthenticated">
+        <c-row>
+          <c-col [md]="12">
+            <div class="mb-3">
+              <label cLabel for="prompt">Enter your code generation prompt:</label>
+              <textarea
+                class="form-control"
+                id="prompt"
+                name="prompt"
+                rows="5"
+                [(ngModel)]="prompt"
+                placeholder="Describe the code you want to generate..."
+              ></textarea>
+            </div>
+          </c-col>
+        </c-row>
+
+        <c-row>
+          <c-col [xs]="12">
+            <button cButton color="primary" (click)="generateCode()" [disabled]="isLoading || !prompt">
+              <c-spinner *ngIf="isLoading" size="sm" color="light"></c-spinner>
+              {{ isLoading ? 'Generating...' : 'Generate Code' }}
+            </button>
+          </c-col>
+        </c-row>
+      </form>
+
+      <!-- Tips for Writing Effective DevSecOps Prompts -->
+      <div *ngIf="isAuthenticated" class="mt-4">
+        <c-card class="mb-4 tips-card">
+          <c-card-header>
+            <strong>Tips for Writing Effective DevSecOps Prompts</strong>
+          </c-card-header>
+          <c-card-body>
+            <ul>
+              <li><strong>Specify security standards:</strong> Mention specific security standards or compliance requirements (NIST, CIS, OWASP, etc.).</li>
+              <li><strong>Include threat model context:</strong> Describe the threat model or security concerns you're addressing.</li>
+              <li><strong>Define environment details:</strong> Specify cloud provider, infrastructure details, and deployment environment.</li>
+              <li><strong>Request security explanations:</strong> Ask for comments explaining the security implications of each section.</li>
+              <li><strong>Mention security tools:</strong> Specify which security tools should be integrated (SonarQube, Trivy, OWASP ZAP, etc.).</li>
+              <li><strong>Ask for validation steps:</strong> Request verification steps to confirm the security measures are working.</li>
+            </ul>
+          </c-card-body>
+        </c-card>
+      </div>
+
+      <!-- DevOps and DevSecOps Sample Prompts Section -->
+      <div *ngIf="isAuthenticated" class="mt-4">
+        <h5>Sample Prompts</h5>
+        <div class="sample-prompts">
+          <c-card *ngFor="let sample of samplePrompts.slice(5, 15)" class="mb-3 sample-prompt-card devsecops-card">
+            <c-card-header>
+              <strong>{{ sample.title }}</strong>
+            </c-card-header>
+            <c-card-body>
+              <p>{{ sample.prompt }}</p>
+              <button cButton color="secondary" size="sm" (click)="useSamplePrompt(sample.prompt)">
+                Use this prompt
+              </button>
+            </c-card-body>
+          </c-card>
+        </div>
+        <!-- <div class="sample-prompts">
+          <c-card *ngFor="let sample of samplePrompts.slice(10, 15)" class="mb-3 sample-prompt-card devops-card">
+            <c-card-header>
+              <strong>{{ sample.title }}</strong>
+            </c-card-header>
+            <c-card-body>
+              <p>{{ sample.prompt }}</p>
+              <button cButton color="secondary" size="sm" (click)="useSamplePrompt(sample.prompt)">
+                Use this prompt
+              </button>
+            </c-card-body>
+          </c-card>
+        </div> -->
+      </div>
+
+      <div *ngIf="generatedCode" class="mt-4">
+        <h4>Generated Code:</h4>
+        <div class="code-container p-3 bg-light">
+          <pre><code>{{ generatedCode }}</code></pre>
+        </div>
+      </div>
+    </c-card-body>
+  </c-card>
+</div>

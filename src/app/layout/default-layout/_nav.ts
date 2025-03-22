@@ -9,6 +9,15 @@ export const navItems: INavData[] = [
       color: 'info',
       text: 'NEW'
     }
+  },
+  {
+    name: 'AI Code Generator',
+    url: '/ai-code-generator',
+    iconComponent: { name: 'cil-code' },
+    badge: {
+      color: 'success',
+      text: 'NEW'
+    }
   }
 //   },
 //   // {

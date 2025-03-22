@@ -61,6 +61,11 @@ export const routes: Routes = [
       {
         path: 'pages',
         loadChildren: () => import('./views/pages/routes').then((m) => m.routes)
+      },
+      {
+        path: 'ai-code-generator',
+        loadChildren: () => import('./views/ai-code-generator/routes').then((m) => m.AI_CODE_GENERATOR_ROUTES),
+        canActivate: [AuthGuard]
       }
     ]
   },
