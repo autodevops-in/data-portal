@@ -10,6 +10,14 @@
         <button cButton color="primary" (click)="login()">Log In</button>
       </c-alert>
 
+      <c-alert color="success" *ngIf="isAuthenticated && userProfile" class="d-flex align-items-center">
+        <c-avatar *ngIf="userProfile.picture" class="me-3" size="md" src="{{userProfile.picture}}" status="success"></c-avatar>
+        <div>
+          <strong>Welcome, {{ userProfile.name || userProfile.email }}</strong>
+          <p class="mb-0">You're logged in and ready to use the AI code generator.</p>
+        </div>
+      </c-alert>
+
       <c-alert color="danger" *ngIf="errorMessage">
         {{ errorMessage }}
       </c-alert>
@@ -20,8 +28,8 @@
           <c-accordion-item>
             <ng-container c-accordion-header>
               <div class="d-flex align-items-center">
-                <strong>Tips for Writing Effective DevOps Prompts</strong>
-                <span class="ms-2 text-muted">(Click to expand for better results)</span>
+                <strong class="tips-header">Tips for Writing Effective DevOps Prompts</strong>
+                <span class="ms-2 text-muted tips-subheader">(Click to expand for better results)</span>
               </div>
             </ng-container>
             <ng-container c-accordion-body>

@@ -10,7 +10,8 @@ import {
   GridModule,
   AlertModule,
   SpinnerModule,
-  AccordionModule
+  AccordionModule,
+  AvatarModule
 } from '@coreui/angular';
 
 @Component({
@@ -27,7 +28,8 @@ import {
     GridModule,
     AlertModule,
     SpinnerModule,
-    AccordionModule
+    AccordionModule,
+    AvatarModule
   ]
 })
 export class AiCodeGeneratorComponent implements OnInit {
@@ -36,6 +38,7 @@ export class AiCodeGeneratorComponent implements OnInit {
   isLoading: boolean = false;
   errorMessage: string = '';
   isAuthenticated: boolean = false;
+  userProfile: any = null;
 
   // Sample prompts focused on DevOps and DevSecOps
   samplePrompts: { title: string; prompt: string }[] = [
@@ -132,6 +135,13 @@ export class AiCodeGeneratorComponent implements OnInit {
   ngOnInit(): void {
     this.auth.isAuthenticated$.subscribe((isAuthenticated) => {
       this.isAuthenticated = isAuthenticated;
+
+      if (isAuthenticated) {
+        // Get user profile information
+        this.auth.user$.subscribe(user => {
+          this.userProfile = user;
+        });
+      }
     });
   }
 
