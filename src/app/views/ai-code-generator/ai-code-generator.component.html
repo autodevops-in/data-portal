@@ -14,6 +14,35 @@
         {{ errorMessage }}
       </c-alert>
 
+      <!-- Tips for Writing Effective DevOps Prompts -->
+      <div *ngIf="isAuthenticated" class="mt-3 mb-4">
+        <c-accordion [flush]="true">
+          <c-accordion-item>
+            <ng-container c-accordion-header>
+              <div class="d-flex align-items-center">
+                <strong>Tips for Writing Effective DevOps Prompts</strong>
+                <span class="ms-2 text-muted">(Click to expand for better results)</span>
+              </div>
+            </ng-container>
+            <ng-container c-accordion-body>
+              <div class="tips-content">
+                <p class="mb-3">Follow these guidelines to get more accurate and useful DevOps code from the AI generator:</p>
+                <ul>
+                  <li><strong>Be specific about infrastructure:</strong> Mention cloud providers (AWS, Azure, GCP), container orchestration (Kubernetes, Docker Swarm), and specific services.</li>
+                  <li><strong>Define CI/CD requirements:</strong> Specify which CI/CD tools (Jenkins, GitHub Actions, GitLab CI) and what stages you need (build, test, deploy).</li>
+                  <li><strong>Include automation scope:</strong> Clarify what should be automated (infrastructure provisioning, testing, deployment, monitoring).</li>
+                  <li><strong>Specify configuration management:</strong> Mention tools like Ansible, Puppet, or Chef if you're using them.</li>
+                  <li><strong>Request monitoring setup:</strong> Ask for monitoring and alerting configurations (Prometheus, Grafana, ELK stack).</li>
+                  <li><strong>Include security requirements:</strong> Specify security scanning, compliance checks, and secure configuration needs.</li>
+                  <li><strong>Ask for documentation:</strong> Request inline comments and documentation for complex automation scripts.</li>
+                </ul>
+                <p class="mt-3 mb-0 text-info"><i>Example: "Create a GitHub Actions workflow for a Node.js application that includes build, test, security scanning with SonarQube, and deployment to AWS ECS with blue/green deployment strategy. Include proper error handling and notifications to Slack."</i></p>
+              </div>
+            </ng-container>
+          </c-accordion-item>
+        </c-accordion>
+      </div>
+
       <form *ngIf="isAuthenticated">
         <c-row>
           <c-col [md]="12">
@@ -41,30 +70,11 @@
         </c-row>
       </form>
 
-      <!-- Tips for Writing Effective DevSecOps Prompts -->
-      <div *ngIf="isAuthenticated" class="mt-4">
-        <c-card class="mb-4 tips-card">
-          <c-card-header>
-            <strong>Tips for Writing Effective DevSecOps Prompts</strong>
-          </c-card-header>
-          <c-card-body>
-            <ul>
-              <li><strong>Specify security standards:</strong> Mention specific security standards or compliance requirements (NIST, CIS, OWASP, etc.).</li>
-              <li><strong>Include threat model context:</strong> Describe the threat model or security concerns you're addressing.</li>
-              <li><strong>Define environment details:</strong> Specify cloud provider, infrastructure details, and deployment environment.</li>
-              <li><strong>Request security explanations:</strong> Ask for comments explaining the security implications of each section.</li>
-              <li><strong>Mention security tools:</strong> Specify which security tools should be integrated (SonarQube, Trivy, OWASP ZAP, etc.).</li>
-              <li><strong>Ask for validation steps:</strong> Request verification steps to confirm the security measures are working.</li>
-            </ul>
-          </c-card-body>
-        </c-card>
-      </div>
-
       <!-- DevOps and DevSecOps Sample Prompts Section -->
-      <div *ngIf="isAuthenticated" class="mt-4">
+      <div *ngIf="isAuthenticated && !generatedCode" class="mt-4">
         <h5>Sample Prompts</h5>
         <div class="sample-prompts">
-          <c-card *ngFor="let sample of samplePrompts.slice(5, 15)" class="mb-3 sample-prompt-card devsecops-card">
+          <c-card *ngFor="let sample of samplePrompts.slice(0, 5)" class="mb-3 sample-prompt-card devsecops-card">
             <c-card-header>
               <strong>{{ sample.title }}</strong>
             </c-card-header>
@@ -76,23 +86,19 @@
             </c-card-body>
           </c-card>
         </div>
-        <!-- <div class="sample-prompts">
-          <c-card *ngFor="let sample of samplePrompts.slice(10, 15)" class="mb-3 sample-prompt-card devops-card">
-            <c-card-header>
-              <strong>{{ sample.title }}</strong>
-            </c-card-header>
-            <c-card-body>
-              <p>{{ sample.prompt }}</p>
-              <button cButton color="secondary" size="sm" (click)="useSamplePrompt(sample.prompt)">
-                Use this prompt
-              </button>
-            </c-card-body>
-          </c-card>
-        </div> -->
       </div>
 
       <div *ngIf="generatedCode" class="mt-4">
-        <h4>Generated Code:</h4>
+        <div class="d-flex justify-content-between align-items-center">
+          <h4>Generated Code:</h4>
+          <button cButton color="light" size="sm" title="Copy to clipboard" (click)="copyToClipboard()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+              <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+              <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+            </svg>
+            Copy
+          </button>
+        </div>
         <div class="code-container p-3 bg-light">
           <pre><code>{{ generatedCode }}</code></pre>
         </div>

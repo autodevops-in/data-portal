@@ -9,7 +9,8 @@ import {
   FormModule,
   GridModule,
   AlertModule,
-  SpinnerModule
+  SpinnerModule,
+  AccordionModule
 } from '@coreui/angular';
 
 @Component({
@@ -25,7 +26,8 @@ import {
     FormModule,
     GridModule,
     AlertModule,
-    SpinnerModule
+    SpinnerModule,
+    AccordionModule
   ]
 })
 export class AiCodeGeneratorComponent implements OnInit {
@@ -178,5 +180,19 @@ export class AiCodeGeneratorComponent implements OnInit {
   // Method to use a sample prompt
   useSamplePrompt(prompt: string): void {
     this.prompt = prompt;
+  }
+
+  // Method to copy generated code to clipboard
+  copyToClipboard(): void {
+    if (this.generatedCode) {
+      navigator.clipboard.writeText(this.generatedCode)
+        .then(() => {
+          // You could add a toast notification here if you have a notification service
+          console.log('Code copied to clipboard');
+        })
+        .catch(err => {
+          console.error('Failed to copy code: ', err);
+        });
+    }
   }
 }
