@@ -2,7 +2,8 @@
     <c-col xs="12">
       <c-card class="mb-4">
         <c-card-header>
-          <strong>Update Profile</strong>
+          <strong>Profile Information</strong>
+          <span class="badge bg-info ms-2">Read Only</span>
         </c-card-header>
         <c-card-body>
           <div *ngIf="isLoading" class="text-center py-5">
@@ -35,7 +36,39 @@
               </div>
             </div>
 
-            <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
+            <c-alert color="info" class="mb-4">
+              <strong>Profile Update Coming Soon</strong>
+              <p class="mb-0">Profile editing is currently disabled. The ability to update your profile will be enabled once the API is ready.</p>
+            </c-alert>
+
+            <form [formGroup]="profileForm">
+              <c-row>
+                <c-col [md]="6">
+                  <div class="mb-3">
+                    <label cLabel for="given_name">First Name</label>
+                    <input cFormControl
+                      id="given_name"
+                      formControlName="given_name"
+                      placeholder="Your first name"
+                      type="text"
+                      [disabled]="true"
+                    />
+                  </div>
+                </c-col>
+                <c-col [md]="6">
+                  <div class="mb-3">
+                    <label cLabel for="family_name">Last Name</label>
+                    <input cFormControl
+                      id="family_name"
+                      formControlName="family_name"
+                      placeholder="Your last name"
+                      type="text"
+                      [disabled]="true"
+                    />
+                  </div>
+                </c-col>
+              </c-row>
+
               <c-row>
                 <c-col [md]="6">
                   <div class="mb-3">
@@ -45,20 +78,19 @@
                       formControlName="name"
                       placeholder="Your full name"
                       type="text"
+                      [disabled]="true"
                     />
-                    <div *ngIf="profileForm.get('name')?.invalid && profileForm.get('name')?.touched" class="text-danger">
-                      <small>Name is required</small>
-                    </div>
                   </div>
                 </c-col>
                 <c-col [md]="6">
                   <div class="mb-3">
-                    <label cLabel for="nickname">Nickname (Optional)</label>
+                    <label cLabel for="nickname">Nickname</label>
                     <input cFormControl
                       id="nickname"
                       formControlName="nickname"
                       placeholder="Your nickname"
                       type="text"
+                      [disabled]="true"
                     />
                   </div>
                 </c-col>
@@ -73,7 +105,6 @@
                   type="email"
                   [disabled]="true"
                 />
-                <small class="text-muted">Email cannot be changed directly. Please contact support if you need to update your email.</small>
               </div>
 
               <div class="mb-3">
@@ -83,14 +114,41 @@
                   formControlName="picture"
                   placeholder="https://example.com/your-picture.jpg"
                   type="url"
+                  [disabled]="true"
                 />
               </div>
 
-              <div class="d-flex justify-content-between">
-                <button cButton color="primary" type="submit" [disabled]="profileForm.invalid || isSaving">
-                  <c-spinner *ngIf="isSaving" size="sm" color="light" class="me-1"></c-spinner>
-                  {{ isSaving ? 'Updating...' : 'Update Profile' }}
-                </button>
+              <div formGroupName="user_metadata">
+                <h5 class="mt-4 mb-3">Preferences</h5>
+                <c-row>
+                  <c-col [md]="6">
+                    <div class="mb-3">
+                      <label cLabel for="preferred_color">Preferred Color</label>
+                      <input cFormControl
+                        id="preferred_color"
+                        formControlName="preferred_color"
+                        placeholder="e.g., blue, red, green"
+                        type="text"
+                        [disabled]="true"
+                      />
+                    </div>
+                  </c-col>
+                  <c-col [md]="6">
+                    <div class="mb-3">
+                      <label cLabel for="preferred_language">Preferred Language</label>
+                      <input cFormControl
+                        id="preferred_language"
+                        formControlName="preferred_language"
+                        placeholder="e.g., en, es, fr"
+                        type="text"
+                        [disabled]="true"
+                      />
+                    </div>
+                  </c-col>
+                </c-row>
+              </div>
+
+              <div class="d-flex justify-content-end">
                 <button cButton color="link" type="button" (click)="auth.logout({ logoutParams: { returnTo: document.location.origin } })">
                   Logout
                 </button>
@@ -103,10 +161,6 @@
               <h5>Additional Information</h5>
               <table class="table table-striped">
                 <tbody>
-                  <tr>
-                    <th scope="row">User ID</th>
-                    <td><code>{{ userProfile.sub }}</code></td>
-                  </tr>
                   <tr>
                     <th scope="row">Last Login</th>
                     <td>{{ userProfile.updated_at | date:'medium' }}</td>

@@ -2,13 +2,14 @@
   <c-col sm="6" xl="3">
     <c-widget-stat-a
       color="primary"
-      [title]="'ADO Projects'"
+      [title]="'Deployment Frequency'"
     >
       <ng-template cTemplateId="widgetValueTemplate" ngPreserveWhitespaces>
-        {{fetchedProjectData.length}}
-        <!-- <span class="fw-normal" style="font-size: 12px;">
-          (-12.4% <svg cIcon name="cilArrowBottom" size="sm"></svg>)
-        </span> -->
+        {{deploymentFrequency?.value || 'Loading...'}}
+        <span class="fw-normal" style="font-size: 12px;" *ngIf="deploymentFrequency?.trend !== undefined">
+          ({{deploymentFrequency?.trend}}%
+          <svg cIcon [name]="(deploymentFrequency?.trend || 0) > 0 ? 'cilArrowTop' : 'cilArrowBottom'" size="sm"></svg>)
+        </span>
       </ng-template>
       <ng-template cTemplateId="widgetActionTemplate">
         <c-dropdown alignment="end" variant="btn-group">
@@ -16,15 +17,8 @@
             <svg cIcon name="cilOptions"></svg>
           </button>
           <ul cDropdownMenu>
-            <li><a [routerLink]="[]" cDropdownItem>Action</a></li>
-            <li><a [routerLink]="[]" cDropdownItem>Another action</a></li>
-            <li><a [routerLink]="[]" cDropdownItem>Something else here</a></li>
-            <li>
-              <hr cDropdownDivider>
-            </li>
-            <li>
-              <button cDropdownItem>Separated link</button>
-            </li>
+            <li><a [routerLink]="[]" cDropdownItem>View Details</a></li>
+            <li><a [routerLink]="[]" cDropdownItem>Export Data</a></li>
           </ul>
         </c-dropdown>
       </ng-template>
@@ -35,13 +29,14 @@
   </c-col>
   <c-col sm="6" xl="3">
     <c-widget-stat-a
-      [title]="'Income'"
+      [title]="'Lead Time'"
       color="info"
     >
       <ng-template cTemplateId="widgetValueTemplate" ngPreserveWhitespaces>
-        <span>$6,200</span>
-        <span class="fw-normal" style="font-size: 12px;">
-          (40.9%<svg cIcon name="cilArrowTop" size="sm"></svg>)
+        <span>{{leadTime?.value || 'Loading...'}}</span>
+        <span class="fw-normal" style="font-size: 12px;" *ngIf="leadTime?.trend !== undefined">
+          ({{leadTime?.trend}}%
+          <svg cIcon [name]="(leadTime?.trend || 0) < 0 ? 'cilArrowTop' : 'cilArrowBottom'" size="sm"></svg>)
         </span>
       </ng-template>
       <ng-template cTemplateId="widgetActionTemplate">
@@ -50,10 +45,8 @@
             <svg cIcon name="cilOptions"></svg>
           </button>
           <ul cDropdownMenu>
-            <li><a [routerLink]="[]" cDropdownItem>Action</a></li>
-            <li><a [routerLink]="[]" cDropdownItem>Another action</a></li>
-            <li><a [routerLink]="[]" cDropdownItem>Something else here</a></li>
-            <li><a [disabled]="true" [routerLink]="[]" cDropdownItem>Disabled</a></li>
+            <li><a [routerLink]="[]" cDropdownItem>View Details</a></li>
+            <li><a [routerLink]="[]" cDropdownItem>Export Data</a></li>
           </ul>
         </c-dropdown>
       </ng-template>
@@ -64,13 +57,14 @@
   </c-col>
   <c-col sm="6" xl="3">
     <c-widget-stat-a
-      [title]="'Conversion Rate'"
+      [title]="'MTTR'"
       color="warning"
     >
       <ng-template cTemplateId="widgetValueTemplate" ngPreserveWhitespaces>
-        <span>2.49</span>
-        <span class="fw-normal" style="font-size: 12px;">
-          (84.7% <svg cIcon name="cilArrowTop" size="sm"></svg>)
+        <span>{{mttr?.value || 'Loading...'}}</span>
+        <span class="fw-normal" style="font-size: 12px;" *ngIf="mttr?.trend !== undefined">
+          ({{mttr?.trend}}%
+          <svg cIcon [name]="(mttr?.trend || 0) < 0 ? 'cilArrowTop' : 'cilArrowBottom'" size="sm"></svg>)
         </span>
       </ng-template>
       <ng-template cTemplateId="widgetActionTemplate">
@@ -79,10 +73,8 @@
             <svg cIcon name="cilOptions"></svg>
           </button>
           <ul cDropdownMenu>
-            <li><a [routerLink]="[]" cDropdownItem>Action</a></li>
-            <li><a [routerLink]="[]" cDropdownItem>Another action</a></li>
-            <li><a [routerLink]="[]" cDropdownItem>Something else here</a></li>
-            <li><a [disabled]="true" [routerLink]="[]" cDropdownItem>Disabled</a></li>
+            <li><a [routerLink]="[]" cDropdownItem>View Details</a></li>
+            <li><a [routerLink]="[]" cDropdownItem>Export Data</a></li>
           </ul>
         </c-dropdown>
       </ng-template>
@@ -93,13 +85,14 @@
   </c-col>
   <c-col sm="6" xl="3">
     <c-widget-stat-a
-      [title]="'Sessions'"
+      [title]="'Change Failure Rate'"
       color="danger"
     >
       <ng-template cTemplateId="widgetValueTemplate" ngPreserveWhitespaces>
-        <span>44K</span>
-        <span class="fw-normal" style="font-size: 12px;">
-          (-23.6% <svg cIcon name="cilArrowBottom" size="sm"></svg>)
+        <span>{{changeFailureRate?.value || 'Loading...'}}</span>
+        <span class="fw-normal" style="font-size: 12px;" *ngIf="changeFailureRate?.trend !== undefined">
+          ({{changeFailureRate?.trend}}%
+          <svg cIcon [name]="(changeFailureRate?.trend || 0) < 0 ? 'cilArrowTop' : 'cilArrowBottom'" size="sm"></svg>)
         </span>
       </ng-template>
       <ng-template cTemplateId="widgetActionTemplate">
@@ -108,15 +101,129 @@
             <svg cIcon name="cilOptions"></svg>
           </button>
           <ul cDropdownMenu>
-            <li><a [routerLink]="[]" cDropdownItem>Action</a></li>
-            <li><a [routerLink]="[]" cDropdownItem>Another action</a></li>
-            <li><a [routerLink]="[]" cDropdownItem>Something else here</a></li>
-            <li><a [disabled]="true" [routerLink]="[]" cDropdownItem>Disabled</a></li>
+            <li><a [routerLink]="[]" cDropdownItem>View Details</a></li>
+            <li><a [routerLink]="[]" cDropdownItem>Export Data</a></li>
           </ul>
         </c-dropdown>
       </ng-template>
       <ng-template cTemplateId="widgetChartTemplate">
         <c-chart [data]="data[3]" [options]="options[3]" class="mt-3 mx-3" height="70" type="bar"></c-chart>
+      </ng-template>
+    </c-widget-stat-a>
+  </c-col>
+</c-row>
+
+<!-- Second row of DevOps metrics -->
+<c-row class="g-4 mt-2">
+  <c-col sm="6" xl="3">
+    <c-widget-stat-a
+      color="success"
+      [title]="'Deployment Success'"
+    >
+      <ng-template cTemplateId="widgetValueTemplate" ngPreserveWhitespaces>
+        {{deploymentSuccess?.value || 'Loading...'}}%
+        <span class="fw-normal" style="font-size: 12px;" *ngIf="deploymentSuccess?.trend !== undefined">
+          ({{deploymentSuccess?.trend}}%
+          <svg cIcon [name]="(deploymentSuccess?.trend || 0) > 0 ? 'cilArrowTop' : 'cilArrowBottom'" size="sm"></svg>)
+        </span>
+      </ng-template>
+      <ng-template cTemplateId="widgetActionTemplate">
+        <c-dropdown alignment="end" variant="btn-group">
+          <button [caret]="false" cButton cDropdownToggle class="p-0 text-white" color="transparent" aria-label="Open dropdown">
+            <svg cIcon name="cilOptions"></svg>
+          </button>
+          <ul cDropdownMenu>
+            <li><a [routerLink]="[]" cDropdownItem>View Details</a></li>
+            <li><a [routerLink]="[]" cDropdownItem>Export Data</a></li>
+          </ul>
+        </c-dropdown>
+      </ng-template>
+      <ng-template cTemplateId="widgetChartTemplate">
+        <c-chart [data]="deploymentSuccessData" [options]="options[0]" class="mt-3 mx-3" height="70" [type]="'line'"></c-chart>
+      </ng-template>
+    </c-widget-stat-a>
+  </c-col>
+  <c-col sm="6" xl="3">
+    <c-widget-stat-a
+      [title]="'Code Quality'"
+      color="primary"
+    >
+      <ng-template cTemplateId="widgetValueTemplate" ngPreserveWhitespaces>
+        <span>{{codeQuality?.value || 'Loading...'}}</span>
+        <span class="fw-normal" style="font-size: 12px;" *ngIf="codeQuality?.trend !== undefined">
+          ({{codeQuality?.trend}}%
+          <svg cIcon [name]="(codeQuality?.trend || 0) > 0 ? 'cilArrowTop' : 'cilArrowBottom'" size="sm"></svg>)
+        </span>
+      </ng-template>
+      <ng-template cTemplateId="widgetActionTemplate">
+        <c-dropdown alignment="end" variant="btn-group">
+          <button [caret]="false" cButton cDropdownToggle class="p-0 text-white" color="transparent" aria-label="Open dropdown">
+            <svg cIcon name="cilOptions"></svg>
+          </button>
+          <ul cDropdownMenu>
+            <li><a [routerLink]="[]" cDropdownItem>View Details</a></li>
+            <li><a [routerLink]="[]" cDropdownItem>Export Data</a></li>
+          </ul>
+        </c-dropdown>
+      </ng-template>
+      <ng-template cTemplateId="widgetChartTemplate">
+        <c-chart [data]="codeQualityData" [options]="options[1]" class="mt-3 mx-3" height="70" type="line"></c-chart>
+      </ng-template>
+    </c-widget-stat-a>
+  </c-col>
+  <c-col sm="6" xl="3">
+    <c-widget-stat-a
+      [title]="'Test Coverage'"
+      color="info"
+    >
+      <ng-template cTemplateId="widgetValueTemplate" ngPreserveWhitespaces>
+        <span>{{testCoverage?.value || 'Loading...'}}%</span>
+        <span class="fw-normal" style="font-size: 12px;" *ngIf="testCoverage?.trend !== undefined">
+          ({{testCoverage?.trend}}%
+          <svg cIcon [name]="(testCoverage?.trend || 0) > 0 ? 'cilArrowTop' : 'cilArrowBottom'" size="sm"></svg>)
+        </span>
+      </ng-template>
+      <ng-template cTemplateId="widgetActionTemplate">
+        <c-dropdown alignment="end" variant="btn-group">
+          <button [caret]="false" cButton cDropdownToggle class="p-0 text-white" color="transparent" aria-label="Open dropdown">
+            <svg cIcon name="cilOptions"></svg>
+          </button>
+          <ul cDropdownMenu>
+            <li><a [routerLink]="[]" cDropdownItem>View Details</a></li>
+            <li><a [routerLink]="[]" cDropdownItem>Export Data</a></li>
+          </ul>
+        </c-dropdown>
+      </ng-template>
+      <ng-template cTemplateId="widgetChartTemplate">
+        <c-chart [data]="testCoverageData" [options]="options[2]" class="mt-3" height="70" type="line"></c-chart>
+      </ng-template>
+    </c-widget-stat-a>
+  </c-col>
+  <c-col sm="6" xl="3">
+    <c-widget-stat-a
+      [title]="'Security Issues'"
+      color="warning"
+    >
+      <ng-template cTemplateId="widgetValueTemplate" ngPreserveWhitespaces>
+        <span>{{securityIssues?.value || 'Loading...'}}</span>
+        <span class="fw-normal" style="font-size: 12px;" *ngIf="securityIssues?.trend !== undefined">
+          ({{securityIssues?.trend}}%
+          <svg cIcon [name]="(securityIssues?.trend || 0) < 0 ? 'cilArrowTop' : 'cilArrowBottom'" size="sm"></svg>)
+        </span>
+      </ng-template>
+      <ng-template cTemplateId="widgetActionTemplate">
+        <c-dropdown alignment="end" variant="btn-group">
+          <button [caret]="false" cButton cDropdownToggle class="p-0 text-white" color="transparent" aria-label="Open dropdown">
+            <svg cIcon name="cilOptions"></svg>
+          </button>
+          <ul cDropdownMenu>
+            <li><a [routerLink]="[]" cDropdownItem>View Details</a></li>
+            <li><a [routerLink]="[]" cDropdownItem>Export Data</a></li>
+          </ul>
+        </c-dropdown>
+      </ng-template>
+      <ng-template cTemplateId="widgetChartTemplate">
+        <c-chart [data]="securityIssuesData" [options]="options[3]" class="mt-3 mx-3" height="70" type="bar"></c-chart>
       </ng-template>
     </c-widget-stat-a>
   </c-col>

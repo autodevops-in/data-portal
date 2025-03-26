@@ -5,7 +5,8 @@ import {
   ChangeDetectorRef,
   Component,
   OnInit,
-  ViewChild
+  ViewChild,
+  OnDestroy
 } from '@angular/core';
 import { getStyle } from '@coreui/utils';
 import { ChartjsComponent } from '@coreui/angular-chartjs';
@@ -13,6 +14,15 @@ import { RouterLink } from '@angular/router';
 import { IconDirective } from '@coreui/icons-angular';
 import { RowComponent, ColComponent, WidgetStatAComponent, TemplateIdDirective, ThemeDirective, DropdownComponent, ButtonDirective, DropdownToggleDirective, DropdownMenuDirective, DropdownItemDirective, DropdownDividerDirective } from '@coreui/angular';
 import { ApiServiceService } from 'src/app/api-service.service';
+import { CommonModule } from '@angular/common';
+import { Subscription, forkJoin } from 'rxjs';
+
+// Interface for DevOps metrics
+interface DevOpsMetric {
+  value: string | number;
+  trend?: number;
+  history?: number[];
+}
 
 @Component({
     selector: 'app-widgets-dropdown',
@@ -20,17 +30,38 @@ import { ApiServiceService } from 'src/app/api-service.service';
     styleUrls: ['./widgets-dropdown.component.scss'],
     changeDetection: ChangeDetectionStrategy.Default,
     standalone: true,
-    imports: [RowComponent, ColComponent, WidgetStatAComponent, TemplateIdDirective, IconDirective, ThemeDirective, DropdownComponent, ButtonDirective, DropdownToggleDirective, DropdownMenuDirective, DropdownItemDirective, RouterLink, DropdownDividerDirective, ChartjsComponent]
+    imports: [RowComponent, ColComponent, WidgetStatAComponent, TemplateIdDirective, IconDirective, ThemeDirective, DropdownComponent, ButtonDirective, DropdownToggleDirective, DropdownMenuDirective, DropdownItemDirective, RouterLink, DropdownDividerDirective, ChartjsComponent, CommonModule]
 })
-export class WidgetsDropdownComponent implements OnInit, AfterContentInit {
+export class WidgetsDropdownComponent implements OnInit, AfterContentInit, OnDestroy {
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     public apiService: ApiServiceService
   ) {}
+
+  // Project data
   fetchedProjectData: any;
+
+  // DevOps metrics
+  deploymentFrequency: DevOpsMetric | null = null;
+  leadTime: DevOpsMetric | null = null;
+  mttr: DevOpsMetric | null = null;
+  changeFailureRate: DevOpsMetric | null = null;
+  deploymentSuccess: DevOpsMetric | null = null;
+  codeQuality: DevOpsMetric | null = null;
+  testCoverage: DevOpsMetric | null = null;
+  securityIssues: DevOpsMetric | null = null;
+
+  // Chart data
   data: any[] = [];
   options: any[] = [];
+  deploymentSuccessData: any = {};
+  codeQualityData: any = {};
+  testCoverageData: any = {};
+  securityIssuesData: any = {};
+
+  // Chart labels
   labels = [
     'January',
     'February',
@@ -49,23 +80,25 @@ export class WidgetsDropdownComponent implements OnInit, AfterContentInit {
     'March',
     'April'
   ];
+
+  // Chart datasets
   datasets = [
     [{
-      label: 'My First dataset',
+      label: 'Deployment Frequency',
       backgroundColor: 'transparent',
       borderColor: 'rgba(255,255,255,.55)',
       pointBackgroundColor: getStyle('--cui-primary'),
       pointHoverBorderColor: getStyle('--cui-primary'),
       data: [65, 59, 84, 84, 51, 55, 40]
     }], [{
-      label: 'My Second dataset',
+      label: 'Lead Time',
       backgroundColor: 'transparent',
       borderColor: 'rgba(255,255,255,.55)',
       pointBackgroundColor: getStyle('--cui-info'),
       pointHoverBorderColor: getStyle('--cui-info'),
       data: [1, 18, 9, 17, 34, 22, 11]
     }], [{
-      label: 'My Third dataset',
+      label: 'MTTR',
       backgroundColor: 'rgba(255,255,255,.2)',
       borderColor: 'rgba(255,255,255,.55)',
       pointBackgroundColor: getStyle('--cui-warning'),
@@ -73,13 +106,50 @@ export class WidgetsDropdownComponent implements OnInit, AfterContentInit {
       data: [78, 81, 80, 45, 34, 12, 40],
       fill: true
     }], [{
-      label: 'My Fourth dataset',
+      label: 'Change Failure Rate',
       backgroundColor: 'rgba(255,255,255,.2)',
       borderColor: 'rgba(255,255,255,.55)',
       data: [78, 81, 80, 45, 34, 12, 40, 85, 65, 23, 12, 98, 34, 84, 67, 82],
       barPercentage: 0.7
     }]
   ];
+
+  // Additional datasets for second row
+  additionalDatasets = [
+    {
+      label: 'Deployment Success',
+      backgroundColor: 'transparent',
+      borderColor: 'rgba(255,255,255,.55)',
+      pointBackgroundColor: getStyle('--cui-success'),
+      pointHoverBorderColor: getStyle('--cui-success'),
+      data: [90, 92, 88, 95, 89, 93, 91]
+    },
+    {
+      label: 'Code Quality',
+      backgroundColor: 'transparent',
+      borderColor: 'rgba(255,255,255,.55)',
+      pointBackgroundColor: getStyle('--cui-primary'),
+      pointHoverBorderColor: getStyle('--cui-primary'),
+      data: [75, 78, 80, 79, 82, 83, 85]
+    },
+    {
+      label: 'Test Coverage',
+      backgroundColor: 'rgba(255,255,255,.2)',
+      borderColor: 'rgba(255,255,255,.55)',
+      pointBackgroundColor: getStyle('--cui-info'),
+      pointHoverBorderColor: getStyle('--cui-info'),
+      data: [65, 68, 70, 72, 75, 78, 80],
+      fill: true
+    },
+    {
+      label: 'Security Issues',
+      backgroundColor: 'rgba(255,255,255,.2)',
+      borderColor: 'rgba(255,255,255,.55)',
+      data: [12, 10, 8, 6, 5, 4, 3],
+      barPercentage: 0.7
+    }
+  ];
+
   optionsDefault = {
     plugins: {
       legend: {
@@ -127,14 +197,114 @@ export class WidgetsDropdownComponent implements OnInit, AfterContentInit {
 
   ngOnInit(): void {
     this.setData();
-    this.apiService.fetchedprojects().subscribe(data => {
+    this.fetchAllMetrics();
+
+    // Fetch projects data
+    const projectsSub = this.apiService.fetchedprojects().subscribe(data => {
       this.fetchedProjectData = data;
     });
+
+    this.subscriptions.push(projectsSub);
   }
 
   ngAfterContentInit(): void {
     this.changeDetectorRef.detectChanges();
+  }
 
+  ngOnDestroy(): void {
+    // Clean up subscriptions to prevent memory leaks
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  fetchAllMetrics(): void {
+    // Use forkJoin to make multiple API calls in parallel
+    const metricsSub = forkJoin({
+      deploymentFrequency: this.apiService.getDeploymentFrequency(),
+      deploymentSuccess: this.apiService.getDeploymentSuccess(),
+      leadTime: this.apiService.getLeadTime(),
+      mttr: this.apiService.getMTTR(),
+      changeFailureRate: this.apiService.getChangeFailureRate(),
+      codeQuality: this.apiService.getCodeQualityMetrics(),
+      testCoverage: this.apiService.getTestCoverageMetrics(),
+      securityIssues: this.apiService.getSecurityMetrics()
+    }).subscribe({
+      next: (results) => {
+        // Process the results
+        this.deploymentFrequency = results.deploymentFrequency || { value: '4.2/week', trend: 12.5 };
+        this.deploymentSuccess = results.deploymentSuccess || { value: 95, trend: 2.3 };
+        this.leadTime = results.leadTime || { value: '3.5 days', trend: -15.2 };
+        this.mttr = results.mttr || { value: '45 mins', trend: -25.7 };
+        this.changeFailureRate = results.changeFailureRate || { value: '4.8%', trend: -8.3 };
+        this.codeQuality = results.codeQuality || { value: 'A', trend: 5.1 };
+        this.testCoverage = results.testCoverage || { value: 82, trend: 3.7 };
+        this.securityIssues = results.securityIssues || { value: 3, trend: -42.5 };
+
+        // Update chart data with real metrics if available
+        this.updateChartDataWithMetrics();
+
+        this.changeDetectorRef.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error fetching DevOps metrics:', error);
+
+        // Set default values in case of error
+        this.deploymentFrequency = { value: '4.2/week', trend: 12.5 };
+        this.deploymentSuccess = { value: 95, trend: 2.3 };
+        this.leadTime = { value: '3.5 days', trend: -15.2 };
+        this.mttr = { value: '45 mins', trend: -25.7 };
+        this.changeFailureRate = { value: '4.8%', trend: -8.3 };
+        this.codeQuality = { value: 'A', trend: 5.1 };
+        this.testCoverage = { value: 82, trend: 3.7 };
+        this.securityIssues = { value: 3, trend: -42.5 };
+      }
+    });
+
+    this.subscriptions.push(metricsSub);
+  }
+
+  updateChartDataWithMetrics(): void {
+    // Update chart data if we have history data from the API
+    if (this.deploymentFrequency?.history) {
+      this.datasets[0][0].data = this.deploymentFrequency.history;
+    }
+
+    if (this.leadTime?.history) {
+      this.datasets[1][0].data = this.leadTime.history;
+    }
+
+    if (this.mttr?.history) {
+      this.datasets[2][0].data = this.mttr.history;
+    }
+
+    if (this.changeFailureRate?.history) {
+      this.datasets[3][0].data = this.changeFailureRate.history;
+    }
+
+    // Update additional datasets
+    this.setAdditionalChartData();
+  }
+
+  setAdditionalChartData(): void {
+    // Set data for the second row of charts
+    this.deploymentSuccessData = {
+      labels: this.labels.slice(0, 7),
+      datasets: [this.additionalDatasets[0]]
+    };
+
+    this.codeQualityData = {
+      labels: this.labels.slice(0, 7),
+      datasets: [this.additionalDatasets[1]]
+    };
+
+    this.testCoverageData = {
+      labels: this.labels.slice(0, 7),
+      datasets: [this.additionalDatasets[2]]
+    };
+
+    this.securityIssuesData = {
+      labels: this.labels.slice(0, 7),
+      datasets: [this.additionalDatasets[3]]
+    };
   }
 
   setData() {
@@ -145,6 +315,7 @@ export class WidgetsDropdownComponent implements OnInit, AfterContentInit {
       };
     }
     this.setOptions();
+    this.setAdditionalChartData();
   }
 
   setOptions() {

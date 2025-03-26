@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { ApiServiceService } from '../../api-service.service';
 import { AuthService } from '@auth0/auth0-angular';
 import {
@@ -22,6 +23,7 @@ import {
   imports: [
     CommonModule,
     FormsModule,
+    RouterModule,
     CardModule,
     ButtonModule,
     FormModule,

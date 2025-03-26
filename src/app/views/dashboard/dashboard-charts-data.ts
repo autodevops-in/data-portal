@@ -31,9 +31,16 @@ export class DashboardChartsData {
   }
 
   public mainChart: IChartProps = { type: 'line' };
+  private isDevOpsMode: boolean = false;
 
   public random(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+
+  // Method to update chart labels for DevOps metrics
+  updateLabelsForDevOps() {
+    this.isDevOpsMode = true;
+    this.initMainChart();
   }
 
   initMainChart(period: string = 'Month') {
@@ -41,6 +48,7 @@ export class DashboardChartsData {
     const brandInfo = getStyle('--cui-info') ?? '#20a8d8';
     const brandInfoBg = hexToRgba(getStyle('--cui-info') ?? '#20a8d8', 10);
     const brandDanger = getStyle('--cui-danger') ?? '#f86c6b';
+    const brandWarning = getStyle('--cui-warning') ?? '#ffc107';
 
     // mainChart
     this.mainChart['elements'] = period === 'Month' ? 12 : 27;
@@ -48,11 +56,26 @@ export class DashboardChartsData {
     this.mainChart['Data2'] = [];
     this.mainChart['Data3'] = [];
 
-    // generate random values for mainChart
-    for (let i = 0; i <= this.mainChart['elements']; i++) {
-      this.mainChart['Data1'].push(this.random(50, 240));
-      this.mainChart['Data2'].push(this.random(20, 160));
-      this.mainChart['Data3'].push(65);
+    // Generate data based on whether we're in DevOps mode or not
+    if (this.isDevOpsMode) {
+      // Generate data for DevOps metrics - more stable, upward trend
+      for (let i = 0; i <= this.mainChart['elements']; i++) {
+        // Build success rate - high values with slight improvement
+        this.mainChart['Data1'].push(this.random(85, 95) + (i * 0.2));
+
+        // Deployment success rate - also high but with more variation
+        this.mainChart['Data2'].push(this.random(80, 98));
+
+        // Target threshold - constant high value
+        this.mainChart['Data3'].push(90);
+      }
+    } else {
+      // Original random data generation
+      for (let i = 0; i <= this.mainChart['elements']; i++) {
+        this.mainChart['Data1'].push(this.random(50, 240));
+        this.mainChart['Data2'].push(this.random(20, 160));
+        this.mainChart['Data3'].push(65);
+      }
     }
 
     let labels: string[] = [];
@@ -85,10 +108,20 @@ export class DashboardChartsData {
       labels = week.concat(week, week, week);
     }
 
+    // Check if we're in dark mode
+    const isDarkMode = document.documentElement.classList.contains('dark-theme');
+
+    // Adjust background opacity for dark mode
+    const bgOpacity = isDarkMode ? 15 : 10;
+    const brandInfoBgAdjusted = hexToRgba(getStyle('--cui-info') ?? '#20a8d8', bgOpacity);
+
+    // Adjust point hover color for dark mode
+    const pointHoverColor = isDarkMode ? getStyle('--cui-gray-100') : '#fff';
+
     const colors = [
       {
         // brandInfo
-        backgroundColor: brandInfoBg,
+        backgroundColor: brandInfoBgAdjusted,
         borderColor: brandInfo,
         pointHoverBackgroundColor: brandInfo,
         borderWidth: 2,
@@ -98,44 +131,59 @@ export class DashboardChartsData {
         // brandSuccess
         backgroundColor: 'transparent',
         borderColor: brandSuccess || '#4dbd74',
-        pointHoverBackgroundColor: '#fff'
+        pointHoverBackgroundColor: pointHoverColor
       },
       {
-        // brandDanger
+        // brandDanger/Warning
         backgroundColor: 'transparent',
-        borderColor: brandDanger || '#f86c6b',
-        pointHoverBackgroundColor: brandDanger,
+        borderColor: this.isDevOpsMode ? brandWarning : brandDanger,
+        pointHoverBackgroundColor: this.isDevOpsMode ? brandWarning : brandDanger,
         borderWidth: 1,
         borderDash: [8, 5]
       }
     ];
 
+    // Set appropriate labels for DevOps metrics
     const datasets: ChartDataset[] = [
       {
         data: this.mainChart['Data1'],
-        label: 'Current',
+        label: this.isDevOpsMode ? 'Build Success Rate' : 'Current',
         ...colors[0]
       },
       {
         data: this.mainChart['Data2'],
-        label: 'Previous',
+        label: this.isDevOpsMode ? 'Deployment Success Rate' : 'Previous',
         ...colors[1]
       },
       {
         data: this.mainChart['Data3'],
-        label: 'BEP',
+        label: this.isDevOpsMode ? 'Target Threshold' : 'BEP',
         ...colors[2]
       }
     ];
 
+    // Get text color based on current theme
+    const textColor = getStyle('--cui-body-color');
+
     const plugins: DeepPartial<PluginOptionsByType<any>> = {
       legend: {
-        display: false
+        display: true,
+        labels: {
+          color: textColor,
+          font: {
+            family: "'Segoe UI', 'Helvetica Neue', Arial, sans-serif"
+          }
+        }
       },
       tooltip: {
         callbacks: {
           labelColor: (context) => ({ backgroundColor: context.dataset.borderColor } as TooltipLabelStyle)
-        }
+        },
+        titleColor: textColor,
+        bodyColor: textColor,
+        backgroundColor: getStyle('--cui-tertiary-bg') || 'rgba(0,0,0,0.8)',
+        borderColor: getStyle('--cui-border-color-translucent'),
+        borderWidth: 1
       }
     };
 
@@ -167,32 +215,41 @@ export class DashboardChartsData {
   }
 
   getScales() {
+    // Get current theme colors
     const colorBorderTranslucent = getStyle('--cui-border-color-translucent');
     const colorBody = getStyle('--cui-body-color');
+    const isDarkMode = document.documentElement.classList.contains('dark-theme');
+
+    // Adjust colors based on theme
+    const gridColor = isDarkMode
+      ? getStyle('--cui-gray-700') || colorBorderTranslucent
+      : colorBorderTranslucent;
+
+    const tickColor = colorBody;
 
     const scales: ScaleOptions<any> = {
       x: {
         grid: {
-          color: colorBorderTranslucent,
+          color: gridColor,
           drawOnChartArea: false
         },
         ticks: {
-          color: colorBody
+          color: tickColor
         }
       },
       y: {
         border: {
-          color: colorBorderTranslucent
+          color: gridColor
         },
         grid: {
-          color: colorBorderTranslucent
+          color: gridColor
         },
-        max: 250,
+        max: this.isDevOpsMode ? 100 : 250,
         beginAtZero: true,
         ticks: {
-          color: colorBody,
+          color: tickColor,
           maxTicksLimit: 5,
-          stepSize: Math.ceil(250 / 5)
+          stepSize: Math.ceil((this.isDevOpsMode ? 100 : 250) / 5)
         }
       }
     };

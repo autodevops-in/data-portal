@@ -4,4 +4,93 @@
       font-size: x-small;
     }
   }
+
+  // Fix for dark mode compatibility
+  :host-context(.dark-theme) {
+    // Text color adjustments
+    .text-body-secondary {
+      color: var(--cui-gray-400) !important;
+    }
+
+    .text-muted {
+      color: var(--cui-gray-400) !important;
+    }
+
+    // Card and border adjustments
+    .card {
+      background-color: var(--cui-dark-bg-subtle);
+      border-color: var(--cui-border-color-translucent);
+    }
+
+    .border {
+      border-color: var(--cui-border-color-translucent) !important;
+    }
+
+    .border-start {
+      border-color: inherit !important;
+    }
+
+    // Table adjustments
+    table.cTable {
+      color: var(--cui-body-color);
+
+      th.bg-body-tertiary {
+        background-color: var(--cui-tertiary-bg) !important;
+        color: var(--cui-body-color);
+      }
+    }
+
+    // Progress bar background
+    .progress {
+      background-color: var(--cui-gray-700);
+    }
+
+    // Badge adjustments
+    .badge {
+      &.text-bg-primary, &.text-bg-success, &.text-bg-info {
+        color: var(--cui-white) !important;
+      }
+    }
+
+    // Chart legend
+    .legend {
+      span {
+        color: var(--cui-body-color);
+      }
+    }
+  }
+
+  // Light mode specific adjustments
+  :host-context(:not(.dark-theme)) {
+    // Ensure proper contrast for text on light backgrounds
+    .text-body-secondary {
+      color: var(--cui-gray-600) !important;
+    }
+
+    // Ensure borders are visible
+    .border {
+      border-color: var(--cui-gray-300) !important;
+    }
+
+    // Table header background
+    table.cTable {
+      th.bg-body-tertiary {
+        background-color: var(--cui-gray-100) !important;
+      }
+    }
+  }
+
+  // Common adjustments for both modes
+  .progress-group-header {
+    color: var(--cui-body-color);
+  }
+
+  .divider {
+    border-color: var(--cui-border-color-translucent);
+  }
+
+  // Fix for chart text
+  c-chart {
+    color: var(--cui-body-color);
+  }
 }

@@ -1,10 +1,18 @@
-<p *ngIf="auth.user$ | async as user">Welcome {{user.name}}</p>
+<div class="mb-4">
+  <h1 class="mb-3">DevOps Dashboard</h1>
+  <p *ngIf="auth.user$ | async as user" class="lead">Welcome {{user.name}}</p>
+  <p class="text-muted">Monitor your DevOps metrics and performance indicators in real-time</p>
+</div>
+
+<!-- DevOps Metrics Widgets -->
 <app-widgets-dropdown />
+
+<!-- Pipeline Performance Chart -->
 <c-card class="my-4">
   <c-card-body>
     <c-row>
       <c-col sm="5">
-        <h4 class="card-title mb-0" id="traffic">Traffic</h4>
+        <h4 class="card-title mb-0" id="pipeline">Pipeline Performance</h4>
         <div class="small text-body-secondary">January - December 2023</div>
       </c-col>
       <c-col class="d-none d-md-block" sm="7">
@@ -76,127 +84,118 @@
       [type]="mainChart.type"
       (chartRef)="handleChartRef($event)"
     >
-      Main chart
+      Pipeline Performance Chart
     </c-chart>
   </c-card-body>
   <c-card-footer>
     <c-row class="text-center mb-2" [xl]="5" [lg]="4" [sm]="2" [xs]="1" [gutter]="4">
       <c-col>
-        <div class="text-body-secondary">Visits</div>
-        <strong>29.703 Users (40%)</strong>
-        <c-progress class="mt-2" thin color="success" value="40" aria-label="User visits" />
+        <div class="text-body-secondary">Build Success</div>
+        <strong>92.7% (↑4.2%)</strong>
+        <c-progress class="mt-2" thin color="success" value="93" aria-label="Build success rate" />
       </c-col>
       <c-col>
-        <div class="text-body-secondary">Unique</div>
-        <div class="fw-semibold text-truncate">24.093 Users (20%)</div>
-        <c-progress class="mt-2" thin color="info" value="20" aria-label="Unique users" />
+        <div class="text-body-secondary">Test Pass Rate</div>
+        <div class="fw-semibold text-truncate">87.5% (↑2.1%)</div>
+        <c-progress class="mt-2" thin color="info" value="88" aria-label="Test pass rate" />
       </c-col>
       <c-col>
-        <div class="text-body-secondary">Page views</div>
-        <div class="fw-semibold text-truncate">78.706 Views (60%)</div>
-        <c-progress class="mt-2" thin color="warning" value="60" aria-label="Page views" />
+        <div class="text-body-secondary">Deployment Success</div>
+        <div class="fw-semibold text-truncate">95.3% (↑1.7%)</div>
+        <c-progress class="mt-2" thin color="warning" value="95" aria-label="Deployment success" />
       </c-col>
       <c-col>
-        <div class="text-body-secondary">New Users</div>
-        <div class="fw-semibold text-truncate">22.123 Users (80%)</div>
-        <c-progress class="mt-2" thin color="danger" value="80" aria-label="New users" />
+        <div class="text-body-secondary">Code Coverage</div>
+        <div class="fw-semibold text-truncate">82.4% (↑3.5%)</div>
+        <c-progress class="mt-2" thin color="danger" value="82" aria-label="Code coverage" />
       </c-col>
       <c-col class="d-none d-xl-block">
-        <div class="text-body-secondary">Bounce Rate</div>
-        <div class="fw-semibold text-truncate">Average Rate (40.15%)</div>
-        <c-progress class="mt-2" thin value="40" aria-label="Bounce rate" />
+        <div class="text-body-secondary">Security Score</div>
+        <div class="fw-semibold text-truncate">A (↑5 points)</div>
+        <c-progress class="mt-2" thin value="90" aria-label="Security score" />
       </c-col>
     </c-row>
   </c-card-footer>
 </c-card>
 
-<app-widgets-brand [withCharts]="true" />
+<!-- DevOps Tools -->
+<c-card class="mb-4">
+  <c-card-header>
+    <strong>DevOps Tools</strong>
+  </c-card-header>
+  <c-card-body>
+    <app-widgets-brand [withCharts]="true" />
+  </c-card-body>
+</c-card>
 
+<!-- CI/CD Pipeline Analytics -->
 <c-row class="mt-4">
   <c-col xs>
     <c-card class="mb-4">
-      <c-card-header>Traffic {{ "&" }} Sales</c-card-header>
+      <c-card-header>CI/CD Pipeline Analytics</c-card-header>
       <c-card-body>
         <c-row>
           <c-col md="6" xl="6" xs="12">
             <c-row>
               <c-col xs="6">
                 <div class="border-start border-start-4 border-start-info py-1 px-3 mb-3">
-                  <div class="text-body-secondary text-truncate small">New Clients</div>
-                  <div class="fs-5 fw-semibold">9,123</div>
+                  <div class="text-body-secondary text-truncate small">Total Pipelines</div>
+                  <div class="fs-5 fw-semibold">1,247</div>
                 </div>
               </c-col>
               <c-col xs="6">
                 <div class="border-start border-start-4 border-start-danger py-1 px-3 mb-3">
                   <div class="text-body-secondary text-truncate small">
-                    Recurring Clients
+                    Failed Pipelines
                   </div>
-                  <div class="fs-5 fw-semibold">22,643</div>
+                  <div class="fs-5 fw-semibold">42</div>
                 </div>
               </c-col>
             </c-row>
             <hr class="mt-0" />
             <div class="progress-group mb-4">
               <div class="progress-group-prepend">
-                <span class="text-body-secondary small">Monday</span>
+                <span class="text-body-secondary small">Build Stage</span>
               </div>
               <div class="progress-group-bars">
-                <c-progress thin color="info" value="34" aria-label="Monday new clients" />
-                <c-progress thin color="danger" value="78" aria-label="Monday recurring clients" />
+                <c-progress thin color="info" value="94" aria-label="Build stage success" />
+                <c-progress thin color="danger" value="6" aria-label="Build stage failure" />
               </div>
             </div>
             <div class="progress-group mb-4">
               <div class="progress-group-prepend">
-                <span class="text-body-secondary small">Tuesday</span>
+                <span class="text-body-secondary small">Test Stage</span>
               </div>
               <div class="progress-group-bars">
-                <c-progress thin color="info" value="56" aria-label="Tuesday new clients" />
-                <c-progress thin color="danger" value="94" aria-label="Tuesday recurring clients" />
+                <c-progress thin color="info" value="88" aria-label="Test stage success" />
+                <c-progress thin color="danger" value="12" aria-label="Test stage failure" />
               </div>
             </div>
             <div class="progress-group mb-4">
               <div class="progress-group-prepend">
-                <span class="text-body-secondary small">Wednesday</span>
+                <span class="text-body-secondary small">Security Scan</span>
               </div>
               <div class="progress-group-bars">
-                <c-progress thin color="info" value="12" aria-label="Wednesday new clients" />
-                <c-progress thin color="danger" value="67" aria-label="Wednesday recurring clients" />
+                <c-progress thin color="info" value="91" aria-label="Security scan success" />
+                <c-progress thin color="danger" value="9" aria-label="Security scan failure" />
               </div>
             </div>
             <div class="progress-group mb-4">
               <div class="progress-group-prepend">
-                <span class="text-body-secondary small">Thursday</span>
+                <span class="text-body-secondary small">Deployment</span>
               </div>
               <div class="progress-group-bars">
-                <c-progress thin color="info" value="43" aria-label="Thursday new clients" />
-                <c-progress thin color="danger" value="91" aria-label="Thursday recurring clients" />
+                <c-progress thin color="info" value="95" aria-label="Deployment success" />
+                <c-progress thin color="danger" value="5" aria-label="Deployment failure" />
               </div>
             </div>
             <div class="progress-group mb-4">
               <div class="progress-group-prepend">
-                <span class="text-body-secondary small">Friday</span>
+                <span class="text-body-secondary small">Integration Tests</span>
               </div>
               <div class="progress-group-bars">
-                <c-progress thin color="info" value="22" aria-label="Friday new clients" />
-                <c-progress thin color="danger" value="73" aria-label="Friday recurring clients" />
-              </div>
-            </div>
-            <div class="progress-group mb-4">
-              <div class="progress-group-prepend">
-                <span class="text-body-secondary small">Saturday</span>
-              </div>
-              <div class="progress-group-bars">
-                <c-progress thin color="info" value="53" aria-label="Saturday new clients" />
-                <c-progress thin color="danger" value="82" aria-label="Saturday recurring clients" />
-              </div>
-            </div>
-            <div class="progress-group mb-4">
-              <div class="progress-group-prepend">
-                <span class="text-body-secondary small">Sunday</span>
-              </div>
-              <div class="progress-group-bars">
-                <c-progress thin color="info" value="9" aria-label="Sunday new clients" />
-                <c-progress thin color="danger" value="69" aria-label="Sunday recurring clients" />
+                <c-progress thin color="info" value="87" aria-label="Integration tests success" />
+                <c-progress thin color="danger" value="13" aria-label="Integration tests failure" />
               </div>
             </div>
             <div class="legend text-center d-none d-md-block" ngPreserveWhitespaces>
@@ -204,12 +203,12 @@
                 <sup>
                   <span class="badge badge-pill badge-sm bg-info">&nbsp;</span>
                 </sup>
-                <span>New clients</span>
+                <span>Success</span>
                 &nbsp;&nbsp;
                 <sup>
                   <span class="badge badge-pill badge-sm bg-danger">&nbsp;</span>
                 </sup>
-                <span>Recurring clients</span>
+                <span>Failure</span>
               </small>
             </div>
           </c-col>
@@ -218,14 +217,14 @@
             <c-row>
               <c-col xs="6">
                 <div class="border-start border-start-4 border-start-warning py-1 px-3 mb-3">
-                  <div class="text-body-secondary text-truncate small">Page views</div>
-                  <div class="fs-5 fw-semibold">78,623</div>
+                  <div class="text-body-secondary text-truncate small">Avg. Build Time</div>
+                  <div class="fs-5 fw-semibold">3m 42s</div>
                 </div>
               </c-col>
               <c-col xs="6">
                 <div class="border-start border-start-4 border-start-success py-1 px-3 mb-3">
-                  <div class="text-body-secondary text-truncate small">Organic</div>
-                  <div class="fs-5 fw-semibold">49,123</div>
+                  <div class="text-body-secondary text-truncate small">Avg. Deploy Time</div>
+                  <div class="fs-5 fw-semibold">5m 18s</div>
                 </div>
               </c-col>
             </c-row>
@@ -234,71 +233,59 @@
 
             <div class="progress-group mb-4">
               <div class="progress-group-header">
-                <svg cIcon class="icon icon-lg me-2" name="cilUser"></svg>
-                <span>Male</span>
-                <span class="ms-auto font-semibold">43%</span>
+                <svg cIcon class="icon icon-lg me-2" name="cilCode"></svg>
+                <span>Code Quality</span>
+                <span class="ms-auto font-semibold">A</span>
               </div>
               <div class="progress-group-bars">
-                <c-progress thin color="warning" value="43" aria-label="Male users" />
+                <c-progress thin color="success" value="90" aria-label="Code quality" />
               </div>
             </div>
-            <div class="progress-group mb-5">
+            <div class="progress-group mb-4">
               <div class="progress-group-header">
-                <svg cIcon class="icon icon-lg me-2" name="cilUserFemale"></svg>
-                <span>Female</span>
-                <span class="ms-auto font-semibold">37%</span>
+                <svg cIcon class="icon icon-lg me-2" name="cilShieldAlt"></svg>
+                <span>Security Score</span>
+                <span class="ms-auto font-semibold">A-</span>
               </div>
               <div class="progress-group-bars">
-                <c-progress thin color="warning" value="37" aria-label="Feale users" />
+                <c-progress thin color="success" value="85" aria-label="Security score" />
               </div>
             </div>
 
-            <div class="progress-group">
+            <div class="progress-group mb-4">
               <div class="progress-group-header">
-                <svg cIcon class="icon icon-lg me-2" name="cibGoogle"></svg>
-                <span>Organic Search</span>
+                <svg cIcon class="icon icon-lg me-2" name="cilSpeedometer"></svg>
+                <span>Performance</span>
                 <span class="ms-auto font-semibold">
-                  191,235 <span class="text-body-secondary small">(56%)</span>
+                  B+ <span class="text-body-secondary small">(78%)</span>
                 </span>
               </div>
               <div class="progress-group-bars">
-                <c-progress thin color="success" value="56" aria-label="Organic search" />
+                <c-progress thin color="warning" value="78" aria-label="Performance score" />
               </div>
             </div>
-            <div class="progress-group">
+            <div class="progress-group mb-4">
               <div class="progress-group-header">
-                <svg cIcon class="icon icon-lg me-2" name="cibFacebook"></svg>
-                <span>Facebook</span>
+                <svg cIcon class="icon icon-lg me-2" name="cilTask"></svg>
+                <span>Test Coverage</span>
                 <span class="ms-auto font-semibold">
-                  51,223 <span class="text-body-secondary small">(15%)</span>
+                  82.4% <span class="text-body-secondary small">(↑3.5%)</span>
                 </span>
               </div>
               <div class="progress-group-bars">
-                <c-progress thin color="success" value="15" aria-label="Facebook" />
+                <c-progress thin color="info" value="82" aria-label="Test coverage" />
               </div>
             </div>
-            <div class="progress-group">
+            <div class="progress-group mb-4">
               <div class="progress-group-header">
-                <svg cIcon class="icon icon-lg me-2" name="cibTwitter"></svg>
-                <span>Twitter</span>
+                <svg cIcon class="icon icon-lg me-2" name="cilSettings"></svg>
+                <span>Infrastructure Health</span>
                 <span class="ms-auto font-semibold">
-                  37,564 <span class="text-body-secondary small">(11%)</span>
+                  97.3% <span class="text-body-secondary small">(↑1.2%)</span>
                 </span>
               </div>
               <div class="progress-group-bars">
-                <c-progress thin color="success" value="11" aria-label="Twitter" />
-              </div>
-            </div>
-            <div class="progress-group">
-              <div class="progress-group-header">
-                <svg cIcon class="icon icon-lg me-2" name="cibLinkedin"></svg>
-                <span>LinkedIn</span>
-                <span class="ms-auto font-semibold">
-                  27,319 <span class="text-body-secondary small">(8%)</span>
-                </span>
-              </div>
-              <div class="progress-group-bars">
-                <c-progress thin color="success" value="8" aria-label="LinkedIn" />
+                <c-progress thin color="success" value="97" aria-label="Infrastructure health" />
               </div>
             </div>
             <div class="divider d-flex justify-content-center">
@@ -319,9 +306,12 @@
     </c-card>
   </c-col>
 </c-row>
+
+<!-- Recent Deployments Table -->
 <c-row>
   <c-col xs>
     <c-card class="mb-4">
+      <c-card-header>Recent Deployments</c-card-header>
       <c-card-body>
         <table
           [hover]="true"
@@ -333,43 +323,33 @@
         >
           <thead class="text-nowrap text-truncate">
           <tr>
-            <th class="bg-body-tertiary text-center ">
-              <svg cIcon name="cilPeople"></svg>
-            </th>
-            <th class="bg-body-tertiary">User</th>
-            <th class="bg-body-tertiary text-center">Country</th>
-            <th class="bg-body-tertiary">Usage</th>
-            <th class="bg-body-tertiary text-center">Payment Method</th>
-            <th class="bg-body-tertiary">Activity</th>
+            <th class="bg-body-tertiary">Project</th>
+            <th class="bg-body-tertiary text-center">Environment</th>
+            <th class="bg-body-tertiary">Status</th>
+            <th class="bg-body-tertiary text-center">Deployed By</th>
+            <th class="bg-body-tertiary">Timestamp</th>
           </tr>
           </thead>
           <tbody>
             @for (user of users; track user.name; let i = $index) {
               <tr>
-                <td class="text-center">
-                  <c-avatar [size]="'md'" src="{{ user.avatar }}" status="{{ user.status }}" />
-                </td>
                 <td>
-                  <div>{{ user.name }}</div>
+                  <div>Project {{ i + 1 }}</div>
                   <div class="small text-body-secondary text-nowrap">
                   <span>
-                    {{ user.state }} | Registered: {{ user.registered }}
+                    v{{ 1 + (i * 0.1).toFixed(1) }} | Build #{{ 100 + i }}
                   </span>
                   </div>
                 </td>
                 <td class="text-center">
-                  <svg
-                    cIcon
-                    id="{{ user.country + user.name }}"
-                    name="cif{{ user.country }}"
-                    size="xl"
-                    title="{{ user.country }}"
-                  ></svg>
+                  <span class="badge text-bg-{{ i % 3 === 0 ? 'primary' : (i % 2 === 0 ? 'success' : 'info') }}">
+                    {{ i % 3 === 0 ? 'Production' : (i % 2 === 0 ? 'Staging' : 'Development') }}
+                  </span>
                 </td>
                 <td>
                   <div class="d-flex justify-content-between">
                     <div class="float-start">
-                      <strong>{{ user.usage }}%</strong>
+                      <strong>{{ i % 4 === 0 ? 'Failed' : (i % 3 === 0 ? 'In Progress' : 'Success') }}</strong>
                     </div>
                     <div class="float-end ms-1 text-nowrap">
                       <small class="text-body-secondary">
@@ -377,13 +357,16 @@
                       </small>
                     </div>
                   </div>
-                  <c-progress thin [value]="user.usage" color="{{ user.color }}" aria-label="Usage" />
+                  <c-progress thin [value]="i % 4 === 0 ? 25 : (i % 3 === 0 ? 60 : 100)" [color]="i % 4 === 0 ? 'danger' : (i % 3 === 0 ? 'warning' : 'success')" aria-label="Deployment status" />
                 </td>
                 <td class="text-center">
-                  <svg cIcon name="cibCc{{ user.payment }}" size="xl"></svg>
+                  <div class="d-flex align-items-center justify-content-center">
+                    <c-avatar [size]="'sm'" src="{{ user.avatar }}" [status]="i % 2 === 0 ? 'success' : (i % 3 === 0 ? 'warning' : 'danger')" class="me-2" />
+                    <span>{{ user.name }}</span>
+                  </div>
                 </td>
                 <td>
-                  <div class="small text-body-secondary">Last login</div>
+                  <div class="small text-body-secondary">Deployed</div>
                   <div class="fw-semibold text-nowrap">{{ user.activity }}</div>
                 </td>
               </tr>

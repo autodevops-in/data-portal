@@ -26,4 +26,66 @@ export class ApiServiceService {
         return this.http.post<any>(`${this.aiApiUrl}/api/generate-code`, { prompt }, { headers });
     }
 
+    updateUserProfile(profileData: any): Observable<any> {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json'
+        });
+
+        return this.http.patch<any>(`${this.apiUrl}/api/users/profile`, profileData, { headers });
+    }
+
+    // DevOps Metrics API Endpoints
+
+    // Deployment Metrics
+    getDeploymentFrequency(): Observable<any> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        return this.http.get<any>(`${this.apiUrl}/api/metrics/deployment-frequency`, {headers});
+    }
+
+    getDeploymentSuccess(): Observable<any> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        return this.http.get<any>(`${this.apiUrl}/api/metrics/deployment-success`, {headers});
+    }
+
+    // Lead Time Metrics
+    getLeadTime(): Observable<any> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        return this.http.get<any>(`${this.apiUrl}/api/metrics/lead-time`, {headers});
+    }
+
+    // MTTR Metrics (Mean Time to Recovery)
+    getMTTR(): Observable<any> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        return this.http.get<any>(`${this.apiUrl}/api/metrics/mttr`, {headers});
+    }
+
+    // Change Failure Rate
+    getChangeFailureRate(): Observable<any> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        return this.http.get<any>(`${this.apiUrl}/api/metrics/change-failure-rate`, {headers});
+    }
+
+    // Infrastructure Metrics
+    getInfrastructureMetrics(): Observable<any> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        return this.http.get<any>(`${this.apiUrl}/api/metrics/infrastructure`, {headers});
+    }
+
+    // Code Quality Metrics
+    getCodeQualityMetrics(): Observable<any> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        return this.http.get<any>(`${this.apiUrl}/api/metrics/code-quality`, {headers});
+    }
+
+    // Test Coverage Metrics
+    getTestCoverageMetrics(): Observable<any> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        return this.http.get<any>(`${this.apiUrl}/api/metrics/test-coverage`, {headers});
+    }
+
+    // Security Metrics
+    getSecurityMetrics(): Observable<any> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        return this.http.get<any>(`${this.apiUrl}/api/metrics/security`, {headers});
+    }
 }
