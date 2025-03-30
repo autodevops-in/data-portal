@@ -1,0 +1,28 @@
+<div class="ai-card mb-4">
+  <div class="pipeline-tabs">
+    <c-nav variant="tabs">
+      <a [class.active]="activeTabIndex === 0" (click)="setActiveTab(0)" cNavLink>
+        <svg cIcon name="cilList" class="me-2"></svg>
+        Pipelines
+      </a>
+      <a [class.active]="activeTabIndex === 1" (click)="setActiveTab(1)" cNavLink>
+        <svg cIcon name="cilHistory" class="me-2"></svg>
+        Recent Runs
+      </a>
+    </c-nav>
+    <c-tab-content>
+      <c-tab-pane [visible]="activeTabIndex === 0">
+        <app-pipeline-list></app-pipeline-list>
+      </c-tab-pane>
+      <c-tab-pane [visible]="activeTabIndex === 1">
+        <app-pipeline-runs [showHeader]="false"></app-pipeline-runs>
+      </c-tab-pane>
+    </c-tab-content>
+  </div>
+</div>
+
+<div class="row" *ngIf="selectedPipelineId">
+  <div class="col-12">
+    <app-pipeline-details [pipelineId]="selectedPipelineId"></app-pipeline-details>
+  </div>
+</div>

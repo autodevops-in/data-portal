@@ -1,0 +1,21 @@
+:host {
+  display: block;
+}
+
+.pipeline-tabs {
+  padding: 1rem;
+}
+
+c-nav {
+  margin-bottom: 1rem;
+}
+
+a[cNavLink] {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+c-tab-content {
+  padding-top: 1rem;
+}// Add any custom styles for the pipeline management component

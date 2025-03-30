@@ -1,0 +1,70 @@
+<!-- Project Breadcrumb Navigation -->
+<c-breadcrumb class="mb-4">
+  <c-breadcrumb-item [url]="'/dashboard'">
+    <svg cIcon name="cilHome" class="me-1"></svg>Dashboard
+  </c-breadcrumb-item>
+  @for (project of projectPath; track project.id; let isLast = $last) {
+    <c-breadcrumb-item [active]="isLast" [url]="isLast ? '' : '/dashboard/project/' + project.id">
+      {{ project.name }}
+    </c-breadcrumb-item>
+  }
+</c-breadcrumb>
+
+<!-- Project Dropdown Navigation -->
+<div class="mb-4">
+  <c-dropdown>
+    <button cButton cDropdownToggle color="primary" class="d-flex align-items-center">
+      <svg cIcon name="cilFolder" class="me-2"></svg>
+      {{ currentProject?.name || 'Select Project' }}
+    </button>
+    <ul cDropdownMenu class="project-dropdown">
+      @for (project of projects; track project.id) {
+        <li>
+          <button cDropdownItem (click)="selectProject(project)">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center">
+                <svg cIcon name="cilFolder" class="me-2"></svg>
+                <span>{{ project.name }}</span>
+              </div>
+              <c-badge color="info" class="ms-2">Sample Data</c-badge>
+            </div>
+          </button>
+          @if (project.children && project.children.length > 0) {
+            <ul class="ps-4 border-start ms-3 mt-2">
+              @for (child of project.children; track child.id) {
+                <li class="mb-2">
+                  <button cDropdownItem (click)="selectProject(child)">
+                    <div class="d-flex align-items-center justify-content-between">
+                      <div class="d-flex align-items-center">
+                        <svg cIcon name="cilFolderOpen" class="me-2"></svg>
+                        <span>{{ child.name }}</span>
+                      </div>
+                      <c-badge color="info" class="ms-2">Sample Data</c-badge>
+                    </div>
+                  </button>
+                  @if (child.children && child.children.length > 0) {
+                    <ul class="ps-4 border-start ms-3 mt-2">
+                      @for (grandchild of child.children; track grandchild.id) {
+                        <li class="mb-2">
+                          <button cDropdownItem (click)="selectProject(grandchild)">
+                            <div class="d-flex align-items-center justify-content-between">
+                              <div class="d-flex align-items-center">
+                                <svg cIcon name="cilFile" class="me-2"></svg>
+                                <span>{{ grandchild.name }}</span>
+                              </div>
+                              <c-badge color="info" class="ms-2">Sample Data</c-badge>
+                            </div>
+                          </button>
+                        </li>
+                      }
+                    </ul>
+                  }
+                </li>
+              }
+            </ul>
+          }
+        </li>
+      }
+    </ul>
+  </c-dropdown>
+</div>

@@ -4,7 +4,7 @@ import { AuthGuard } from '@auth0/auth0-angular';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'projects',
     pathMatch: 'full'
   },
   {
@@ -14,6 +14,14 @@ export const routes: Routes = [
       title: 'Home'
     },
     children: [
+      {
+        path: 'projects',
+        loadChildren: () => import('./views/projects/routes').then((m) => m.routes),
+        canActivate: [AuthGuard],
+        data: {
+          title: 'Projects'
+        }
+      },
       {
         path: 'dashboard',
         loadChildren: () => import('./views/dashboard/routes').then((m) => m.routes),
@@ -66,6 +74,11 @@ export const routes: Routes = [
         path: 'ai-code-generator',
         loadChildren: () => import('./views/ai-code-generator/routes').then((m) => m.AI_CODE_GENERATOR_ROUTES),
         canActivate: [AuthGuard]
+      },
+      {
+        path: 'pipelines',
+        loadChildren: () => import('./views/pipelines/routes').then((m) => m.routes),
+        canActivate: [AuthGuard]
       }
     ]
   },
@@ -83,5 +96,5 @@ export const routes: Routes = [
       title: 'Page 500'
     }
   },
-  { path: '**', redirectTo: 'dashboard' }
+  { path: '**', redirectTo: 'projects' }
 ];

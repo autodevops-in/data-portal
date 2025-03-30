@@ -16,6 +16,7 @@ import { RowComponent, ColComponent, WidgetStatAComponent, TemplateIdDirective, 
 import { ApiServiceService } from 'src/app/api-service.service';
 import { CommonModule } from '@angular/common';
 import { Subscription, forkJoin } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 // Interface for DevOps metrics
 interface DevOpsMetric {
@@ -199,10 +200,12 @@ export class WidgetsDropdownComponent implements OnInit, AfterContentInit, OnDes
     this.setData();
     this.fetchAllMetrics();
 
-    // Fetch projects data
-    const projectsSub = this.apiService.fetchedprojects().subscribe(data => {
-      this.fetchedProjectData = data;
-    });
+    // Debounce mouse events
+    const projectsSub = this.apiService.fetchedprojects()
+      .pipe(debounceTime(300)) // Debounce to reduce frequent updates
+      .subscribe(data => {
+        this.fetchedProjectData = data;
+      });
 
     this.subscriptions.push(projectsSub);
   }

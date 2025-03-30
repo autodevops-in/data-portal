@@ -1,5 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
 
+// Import Google Fonts
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+// Import our custom theme variables first
+@import "custom-theme";
+
 // If you want to override variables do it here
 @import "variables";
 

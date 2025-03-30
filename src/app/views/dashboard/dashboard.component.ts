@@ -1,9 +1,16 @@
 import { DOCUMENT, NgStyle, CommonModule} from '@angular/common';
 import { Component, DestroyRef, effect, inject, OnInit, OnDestroy, Renderer2, signal, WritableSignal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ChartOptions } from 'chart.js';
 import { AuthService } from '@auth0/auth0-angular';
 import { getStyle, hexToRgba } from '@coreui/utils';
+import { ProjectService } from '../../services/project.service';
+import { Project } from '../../models/project.model';
+import { ProjectNavComponent } from '../../components/project-nav/project-nav.component';
+import { PipelineManagementComponent } from '../../components/pipelines/pipeline-management/pipeline-management.component';
+import { DashboardHeaderComponent } from '../../components/dashboard-header/dashboard-header.component';
+import { PipelineRunsComponent } from '../../components/pipelines/pipeline-runs/pipeline-runs.component';
 import {
   AvatarComponent,
   ButtonDirective,
@@ -20,7 +27,10 @@ import {
   RowComponent,
   TableDirective,
   TextColorDirective,
-  BadgeComponent
+  BadgeComponent,
+  BreadcrumbComponent,
+  BreadcrumbItemComponent,
+  BreadcrumbRouterComponent
 } from '@coreui/angular';
 import { ChartjsComponent } from '@coreui/angular-chartjs';
 import { IconDirective } from '@coreui/icons-angular';
@@ -29,6 +39,7 @@ import { WidgetsBrandComponent } from '../widgets/widgets-brand/widgets-brand.co
 import { WidgetsDropdownComponent } from '../widgets/widgets-dropdown/widgets-dropdown.component';
 import { DashboardChartsData, IChartProps } from './dashboard-charts-data';
 import { Subscription } from 'rxjs';
+import { throttleTime } from 'rxjs/operators';
 
 interface IUser {
   name: string;
@@ -77,14 +88,27 @@ interface DevOpsMetric {
     TableDirective,
     AvatarComponent,
     CommonModule,
-    BadgeComponent
+    BadgeComponent,
+    ProjectNavComponent,
+    PipelineManagementComponent,
+    DashboardHeaderComponent,
+    PipelineRunsComponent,
+    BreadcrumbComponent,
+    BreadcrumbItemComponent,
+    BreadcrumbRouterComponent,
+    RouterModule
   ]
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
+  currentProject: Project | null = null;
 
-  constructor(public auth: AuthService, public apiService: ApiServiceService){
-  }
+  constructor(
+    public auth: AuthService,
+    public apiService: ApiServiceService,
+    private projectService: ProjectService,
+    private route: ActivatedRoute
+  ) {}
   readonly #destroyRef: DestroyRef = inject(DestroyRef);
   readonly #document: Document = inject(DOCUMENT);
   readonly #renderer: Renderer2 = inject(Renderer2);
@@ -197,6 +221,33 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.initCharts();
     this.updateChartOnColorModeChange();
     this.fetchDevOpsMetrics();
+
+    // Check if we have a project ID in the route
+    this.subscriptions.push(
+      this.route.paramMap.subscribe(params => {
+        const projectId = params.get('id');
+        if (projectId) {
+          // Load the specific project
+          this.projectService.getProjectById(projectId).subscribe(project => {
+            if (project) {
+              this.projectService.setCurrentProject(project);
+            }
+          });
+        }
+      })
+    );
+
+    // Throttle project changes
+    this.subscriptions.push(
+      this.projectService.currentProject$
+        .pipe(throttleTime(500)) // Throttle updates to 500ms
+        .subscribe(project => {
+          this.currentProject = project;
+          if (project) {
+            console.log(`Loaded project: ${project.name}`);
+          }
+        })
+    );
   }
 
   ngOnDestroy(): void {

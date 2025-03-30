@@ -1,0 +1,153 @@
+<div class="ai-card mb-4" *ngIf="pipeline">
+  <div class="pipeline-detail-header">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center">
+        <div class="pipeline-detail-icon me-3" [ngClass]="'status-' + pipeline.status">
+          <svg cIcon name="cilSettings"></svg>
+        </div>
+        <div>
+          <h3 class="mb-1">{{ pipeline.name }}</h3>
+          <p class="text-muted mb-0">{{ pipeline.description }}</p>
+        </div>
+      </div>
+      <div class="pipeline-detail-actions">
+        <span class="status-badge" [ngClass]="'status-' + pipeline.status">
+          {{ getStageStatusText(pipeline.status) }}
+        </span>
+        <button class="ai-btn ai-btn-light rounded-pill ms-2">
+          <svg cIcon name="cilOptions"></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="pipeline-detail-info">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="info-card">
+          <div class="info-card-label">Environment</div>
+          <div class="info-card-value">
+            <span class="env-badge" [ngClass]="'env-' + pipeline.environment.toLowerCase()">
+              {{ pipeline.environment }}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="info-card">
+          <div class="info-card-label">Last Run</div>
+          <div class="info-card-value">{{ pipeline.lastRunAt | date:'MMM d, h:mm a' }}</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="info-card">
+          <div class="info-card-label">Created By</div>
+          <div class="info-card-value">{{ pipeline.createdBy }}</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="info-card">
+          <div class="info-card-label">Last Run By</div>
+          <div class="info-card-value">{{ pipeline.lastRunBy }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pipeline-detail-content" *ngIf="currentRun">
+    <div class="pipeline-run-header">
+      <h4>Current Run</h4>
+      <div class="pipeline-progress">
+        <div class="progress-percentage">{{ getOverallProgress() }}%</div>
+        <c-progress class="progress-bar-custom">
+          <c-progress-bar
+            [value]="getOverallProgress()"
+            [color]="getStageStatusColor(currentRun.status)"
+          ></c-progress-bar>
+        </c-progress>
+      </div>
+    </div>
+
+    <div class="pipeline-stages-timeline">
+      <div class="timeline-item" *ngFor="let stage of currentRun.stages; let i = index; let isLast = last">
+        <div class="timeline-marker" [ngClass]="'status-' + stage.status">
+          <svg
+            cIcon
+            [name]="getStageIcon(stage.status)"
+            [ngClass]="{'spin': stage.status === 'running'}"
+          ></svg>
+        </div>
+        <div class="timeline-content" [ngClass]="{'active': isStageActive(stage)}">
+          <div class="timeline-header">
+            <h5 class="timeline-title">{{ stage.name }}</h5>
+            <span class="timeline-status" [ngClass]="'status-' + stage.status">
+              {{ getStageStatusText(stage.status) }}
+            </span>
+          </div>
+          <div class="timeline-body">
+            <div class="timeline-info">
+              <div class="timeline-info-item" *ngIf="stage.startedAt">
+                <svg cIcon name="cilClock" class="me-1"></svg>
+                Started: {{ stage.startedAt | date:'MMM d, h:mm a' }}
+              </div>
+              <div class="timeline-info-item" *ngIf="stage.completedAt">
+                <svg cIcon name="cilCheckAlt" class="me-1"></svg>
+                Completed: {{ stage.completedAt | date:'MMM d, h:mm a' }}
+              </div>
+              <div class="timeline-info-item" *ngIf="stage.duration">
+                <svg cIcon name="cilTimer" class="me-1"></svg>
+                Duration: {{ stage.duration }}s
+              </div>
+            </div>
+
+            <!-- AI Insights for this stage -->
+            <div class="ai-insights" *ngIf="stage.status === 'succeeded' || stage.status === 'failed'">
+              <div class="ai-insights-header">
+                <div class="ai-pulse me-2"></div>
+                <span>AI Insights</span>
+              </div>
+              <div class="ai-insights-content">
+                <p *ngIf="stage.status === 'succeeded'" class="mb-0">
+                  This stage completed successfully in {{ stage.duration }}s, which is 15% faster than the average run time.
+                </p>
+                <p *ngIf="stage.status === 'failed'" class="mb-0">
+                  This stage failed due to a dependency issue. I recommend updating the package.json file to fix version conflicts.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="timeline-connector" *ngIf="!isLast"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state text-center py-5" *ngIf="!currentRun">
+    <div class="empty-state-icon mb-3">
+      <svg cIcon name="cilMediaPlay" width="48" height="48"></svg>
+    </div>
+    <h5>No pipeline runs found</h5>
+    <p class="text-muted">Start a new pipeline run to see execution details</p>
+    <!-- Run button - completely static version with CSS-only state changes -->
+    <button
+      class="ai-btn ai-btn-primary mt-2 pipeline-run-btn"
+      [class.running]="isRunningPipeline || isPipelineRunning"
+      [disabled]="isRunningPipeline || isPipelineRunning"
+      (click)="runPipeline()">
+      <div class="btn-content">
+        <svg cIcon name="cilMediaPlay" class="btn-icon"></svg>
+        <span class="spinner-border spinner-border-sm btn-spinner" role="status" aria-hidden="true"></span>
+        <span class="btn-text-idle">Run Pipeline</span>
+        <span class="btn-text-running">Running...</span>
+      </div>
+    </button>
+  </div>
+</div>
+
+<div class="ai-card mb-4 empty-state text-center py-5" *ngIf="!pipeline">
+  <div class="empty-state-icon mb-3">
+    <svg cIcon name="cilFolderOpen" width="48" height="48"></svg>
+  </div>
+  <h5>No Pipeline Selected</h5>
+  <p class="text-muted">Select a pipeline to view details</p>
+</div>

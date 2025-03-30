@@ -1,0 +1,25 @@
+.project-dropdown {
+  min-width: 300px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+:host-context(.dark-theme) {
+  .project-dropdown {
+    background-color: var(--cui-dark-bg-subtle);
+    border-color: var(--cui-border-color-translucent);
+  }
+}
+
+button.dropdown-item {
+  cursor: pointer;
+  
+  &:hover {
+    background-color: var(--cui-tertiary-bg);
+  }
+  
+  &:active {
+    background-color: var(--cui-primary);
+    color: white;
+  }
+}

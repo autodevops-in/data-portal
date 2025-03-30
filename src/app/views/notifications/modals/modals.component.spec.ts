@@ -14,10 +14,19 @@ describe('ModalsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [ModalModule, NoopAnimationsModule, GridModule, CardModule, PopoverModule, ButtonModule, RouterTestingModule, TooltipModule, ModalsComponent],
-    providers: [IconSetService]
-})
-      .compileComponents();
+      imports: [
+        ModalModule,
+        NoopAnimationsModule,
+        GridModule,
+        CardModule,
+        PopoverModule,
+        ButtonModule,
+        RouterTestingModule,
+        TooltipModule,
+        ModalsComponent
+      ],
+      providers: [IconSetService]
+    }).compileComponents();
   });
 
   beforeEach(() => {

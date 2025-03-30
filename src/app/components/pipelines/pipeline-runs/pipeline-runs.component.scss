@@ -1,0 +1,67 @@
+:host {
+  display: block;
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 0.35em 0.65em;
+  font-weight: 500;
+}
+
+c-progress {
+  height: 4px;
+  margin-top: 0.5rem;
+}
+
+.text-bg-primary {
+  background-color: var(--cui-primary);
+  color: white;
+}
+
+.text-bg-success {
+  background-color: var(--cui-success);
+  color: white;
+}
+
+.text-bg-info {
+  background-color: var(--cui-info);
+  color: white;
+}
+
+.text-bg-warning {
+  background-color: var(--cui-warning);
+  color: white;
+}
+
+.text-bg-danger {
+  background-color: var(--cui-danger);
+  color: white;
+}
+
+.text-bg-secondary {
+  background-color: var(--cui-secondary);
+  color: white;
+}
+
+c-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.fw-semibold {
+  font-weight: 600;
+}
+
+.small {
+  font-size: 0.875em;
+}
+
+.text-body-secondary {
+  color: var(--cui-body-color-secondary);
+}
+
+.text-nowrap {
+  white-space: nowrap;
+}

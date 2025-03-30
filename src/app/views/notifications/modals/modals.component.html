@@ -26,8 +26,8 @@
             </c-modal-header>
             <c-modal-body>Modal body text goes here.</c-modal-body>
             <c-modal-footer>
-              <button cButton color="secondary">Close</button>
-              <button cButton color="primary">Save changes</button>
+              <button cButton color="secondary" size="sm">Close</button>
+              <button cButton color="primary" size="sm">Save changes</button>
             </c-modal-footer>
           </c-modal>
         </app-docs-example>
@@ -45,7 +45,7 @@
           in from the top of the page.
         </p>
         <app-docs-example href="components/modal#live-demo">
-          <ng-container *ngTemplateOutlet="liveDemo" />
+          <ng-container *ngTemplateOutlet="liveDemo"></ng-container>
         </app-docs-example>
       </c-card-body>
     </c-card>
@@ -62,7 +62,7 @@
           clicking outside it. Click the button below to try it.
         </p>
         <app-docs-example href="components/modal#static-backdrop">
-          <ng-container *ngTemplateOutlet="staticBackdrop" />
+          <ng-container *ngTemplateOutlet="staticBackdrop"></ng-container>
         </app-docs-example>
       </c-card-body>
     </c-card>
@@ -77,14 +77,14 @@
           If your modals are too long for the user’s viewport, they scroll the page by itself.
         </p>
         <app-docs-example href="components/modal#scrolling-long-content">
-          <ng-container *ngTemplateOutlet="scrollingLongContent" />
+          <ng-container *ngTemplateOutlet="scrollingLongContent"></ng-container>
         </app-docs-example>
         <p class="text-body-secondary small" ngPreserveWhitespaces>
           You can also create a scrollable modal that allows scroll the modal body by adding <code>scrollable</code>
           prop.
         </p>
         <app-docs-example href="components/modal#scrolling-long-content">
-          <ng-container *ngTemplateOutlet="scrollableLongContent" />
+          <ng-container *ngTemplateOutlet="scrollableLongContent"></ng-container>
         </app-docs-example>
       </c-card-body>
     </c-card>
@@ -100,10 +100,10 @@
           vertically center the modal.
         </p>
         <app-docs-example href="components/modal#vertically-centered">
-          <ng-container *ngTemplateOutlet="verticallyCentered" />
+          <ng-container *ngTemplateOutlet="verticallyCentered"></ng-container>
         </app-docs-example>
         <app-docs-example href="components/modal#vertically-centered">
-          <ng-container *ngTemplateOutlet="verticallyCenteredScrollable" />
+          <ng-container *ngTemplateOutlet="verticallyCenteredScrollable"></ng-container>
         </app-docs-example>
       </c-card-body>
     </c-card>
@@ -120,7 +120,7 @@
           automatically dismissed.
         </p>
         <app-docs-example href="components/modal#tooltips-and-popovers">
-          <ng-container *ngTemplateOutlet="withPopover" />
+          <ng-container *ngTemplateOutlet="withPopover"></ng-container>
         </app-docs-example>
       </c-card-body>
     </c-card>
@@ -182,7 +182,7 @@
           </tbody>
         </table>
         <app-docs-example href="components/modal#optional-sizes">
-          <ng-container *ngTemplateOutlet="optionalSizes" />
+          <ng-container *ngTemplateOutlet="optionalSizes"></ng-container>
         </app-docs-example>
       </c-card-body>
     </c-card>
@@ -254,7 +254,7 @@
           </tbody>
         </table>
         <app-docs-example href="components/modal#fullscreen-modal">
-          <ng-container *ngTemplateOutlet="fullScreen" />
+          <ng-container *ngTemplateOutlet="fullScreen"></ng-container>
         </app-docs-example>
       </c-card-body>
     </c-card>
@@ -273,7 +273,9 @@
       <button (click)="toggleLiveDemo()" cButton color="secondary">
         Close
       </button>
-      <button cButton color="primary">Save changes</button>
+      <button cButton color="primary">
+        Save changes
+      </button>
     </c-modal-footer>
   </c-modal>
 </ng-template>

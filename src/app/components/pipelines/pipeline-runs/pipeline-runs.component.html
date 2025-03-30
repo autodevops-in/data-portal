@@ -1,0 +1,72 @@
+<c-card class="mb-4">
+  <c-card-header *ngIf="showHeader">Recent Pipeline Runs</c-card-header>
+  <c-card-body>
+    <table
+      [hover]="true"
+      [responsive]="true"
+      [striped]="true"
+      align="middle"
+      cTable
+      class="mb-0 border"
+    >
+      <thead class="text-nowrap text-truncate">
+        <tr>
+          <th class="bg-body-tertiary">Pipeline</th>
+          <th class="bg-body-tertiary text-center">Environment</th>
+          <th class="bg-body-tertiary">Status</th>
+          <th class="bg-body-tertiary text-center">Triggered By</th>
+          <th class="bg-body-tertiary">Duration</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let run of pipelineRuns">
+          <td>
+            <div>{{ run.pipelineName }}</div>
+            <div class="small text-body-secondary text-nowrap">
+              <span>
+                {{ run.version || 'v1.0.0' }} | Build #{{ run.buildNumber || 100 }}
+              </span>
+            </div>
+          </td>
+          <td class="text-center">
+            <span class="badge text-bg-{{ getEnvironmentColor(run.environment) }}">
+              {{ run.environment }}
+            </span>
+          </td>
+          <td>
+            <div class="d-flex justify-content-between">
+              <div class="float-start">
+                <strong>{{ getStatusText(run.status) }}</strong>
+              </div>
+              <div class="float-end ms-1 text-nowrap">
+                <small class="text-body-secondary">
+                  {{ getTimeAgo(run.startedAt) }}
+                </small>
+              </div>
+            </div>
+            <c-progress thin [value]="getStatusValue(run.status)" [color]="getStatusColor(run.status)" aria-label="Pipeline run status" />
+          </td>
+          <td class="text-center">
+            <div class="d-flex align-items-center justify-content-center">
+              <c-avatar [size]="'sm'" [src]="run.triggeredByAvatar || 'assets/img/avatars/default.jpg'" [status]="run.status === 'succeeded' ? 'success' : (run.status === 'running' ? 'warning' : 'danger')" class="me-2" />
+              <span>{{ run.triggeredByName }}</span>
+            </div>
+          </td>
+          <td>
+            <div class="small text-body-secondary">Duration</div>
+            <div class="fw-semibold text-nowrap">{{ formatDuration(run.duration) }}</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <!-- Empty state when no pipeline runs are available -->
+    <div class="text-center py-5" *ngIf="pipelineRuns.length === 0">
+      <div class="mb-3">
+        <svg cIcon name="cilMediaPlay" width="48" height="48" class="text-body-secondary"></svg>
+      </div>
+      <h5>No pipeline runs found</h5>
+      <p class="text-muted">Run a pipeline to see execution history</p>
+    </div>
+  </c-card-body>
+</c-card>

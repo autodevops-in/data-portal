@@ -7,6 +7,13 @@ export const routes: Routes = [
     data: {
       title: $localize`Dashboard`
     }
+  },
+  {
+    path: 'project/:id',
+    loadComponent: () => import('./dashboard.component').then(m => m.DashboardComponent),
+    data: {
+      title: $localize`Project Dashboard`
+    }
   }
 ];
 

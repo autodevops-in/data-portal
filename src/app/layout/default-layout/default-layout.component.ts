@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { NgScrollbar } from 'ngx-scrollbar';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ImgModule } from '@coreui/angular';
 import { IconDirective } from '@coreui/icons-angular';
 import {
@@ -18,18 +19,12 @@ import {
 import { DefaultFooterComponent, DefaultHeaderComponent } from './';
 import { navItems } from './_nav';
 
-function isOverflown(element: HTMLElement) {
-  return (
-    element.scrollHeight > element.clientHeight ||
-    element.scrollWidth > element.clientWidth
-  );
-}
-
 @Component({
   selector: 'app-dashboard',
   templateUrl: './default-layout.component.html',
   styleUrls: ['./default-layout.component.scss'],
   standalone: true,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
     SidebarComponent,
     SidebarHeaderComponent,
@@ -50,7 +45,9 @@ function isOverflown(element: HTMLElement) {
   ]
 })
 export class DefaultLayoutComponent {
-  public navItems = navItems;
+  public navItems = navItems.filter(item => 
+    item.name === 'Projects' || item.name === 'AI Code Generator'
+  );
 
   onScrollbarUpdate($event: any) {
     // if ($event.verticalUsed) {

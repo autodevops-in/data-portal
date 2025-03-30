@@ -1,0 +1,103 @@
+<div class="dashboard-header ai-card mb-4">
+  <div class="row align-items-center">
+    <!-- Project Info -->
+    <div class="col-md-7">
+      <div class="d-flex align-items-center">
+        <div class="header-icon-container me-3">
+          <div class="header-icon">
+            <svg cIcon [name]="currentProject ? getProjectIcon(currentProject) : 'cilSpeedometer'" width="24" height="24"></svg>
+          </div>
+        </div>
+        <div>
+          <h1 class="mb-0">
+            {{ currentProject ? currentProject.name : 'AutoDevOps Dashboard' }}
+            <c-badge [color]="getEnvironmentClass(currentProject?.environment)" class="ms-2 badge-pill" *ngIf="currentProject?.environment">
+              {{ currentProject?.environment }}
+            </c-badge>
+          </h1>
+          <p class="text-muted mb-0">
+            {{ currentProject ? currentProject.description : 'Monitor and manage your DevOps pipelines' }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Assistant Compact Module -->
+    <div class="col-md-5">
+      <div class="ai-assistant-compact">
+        <div class="ai-assistant-input-container" [class.active]="aiAssistantActive">
+          <div class="ai-pulse-container" (click)="toggleAIAssistant()">
+            <div class="ai-pulse"></div>
+          </div>
+          <input
+            type="text"
+            class="ai-assistant-input"
+            placeholder="Ask AI Assistant..."
+            (focus)="showAIAssistant()"
+            [(ngModel)]="aiQuery"
+            (keyup.enter)="sendAIQuery()"
+          >
+          <button class="ai-assistant-send" (click)="sendAIQuery()">
+            <svg cIcon name="cilPaperPlane"></svg>
+          </button>
+        </div>
+        <button cButton color="secondary" class="btn-simple" (click)="toggleAIAssistant()">
+          Dashboard
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AI Assistant Panel (conditionally shown) -->
+<div class="ai-assistant-panel ai-card mb-4" *ngIf="aiAssistantActive">
+  <div class="ai-assistant-header">
+    <div class="d-flex align-items-center">
+      <div class="ai-assistant-avatar me-3">
+        <div class="ai-pulse"></div>
+      </div>
+      <div>
+        <h5 class="mb-0">AutoDevOps AI Assistant</h5>
+        <p class="text-muted mb-0">How can I help with your project?</p>
+      </div>
+    </div>
+    <button class="ai-assistant-close" (click)="toggleAIAssistant()">
+      <svg cIcon name="cilX"></svg>
+    </button>
+  </div>
+  <div class="ai-assistant-body">
+    <div class="ai-chat-bubble ai-chat-assistant">
+      <p class="mb-0">Hello! I can help you with:</p>
+      <ul class="mb-0 mt-2">
+        <li>Creating and managing pipelines</li>
+        <li>Analyzing deployment issues</li>
+        <li>Optimizing your CI/CD workflows</li>
+        <li>Generating code and configurations</li>
+      </ul>
+    </div>
+    <ng-container *ngFor="let message of aiMessages">
+      <div class="ai-chat-bubble" [ngClass]="{'ai-chat-user': message.isUser, 'ai-chat-assistant': !message.isUser}">
+        <p class="mb-0">{{ message.text }}</p>
+      </div>
+    </ng-container>
+    <div class="ai-typing" *ngIf="isAITyping">
+      <span class="ai-typing-dot"></span>
+      <span class="ai-typing-dot"></span>
+      <span class="ai-typing-dot"></span>
+    </div>
+  </div>
+  <div class="ai-assistant-footer">
+    <div class="input-group">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Ask the AI assistant..."
+        [(ngModel)]="aiQuery"
+        (keyup.enter)="sendAIQuery()"
+      >
+      <button class="btn btn-primary" (click)="sendAIQuery()">
+        <svg cIcon name="cilPaperPlane"></svg>
+      </button>
+    </div>
+  </div>
+</div>

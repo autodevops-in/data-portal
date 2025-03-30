@@ -1,0 +1,399 @@
+.pipeline-header {
+  padding: 1.5rem 1.5rem 0.5rem;
+
+  h2 {
+    font-weight: 600;
+  }
+}
+
+.pipeline-filters {
+  padding: 0 1.5rem;
+
+  .input-group {
+    border-radius: 2rem;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+
+    .input-group-text, .form-control {
+      border-color: var(--cui-border-color);
+    }
+
+    .form-control {
+      &:focus {
+        box-shadow: none;
+        border-color: var(--cui-primary);
+      }
+    }
+  }
+
+  .btn-outline-secondary {
+    border-color: var(--cui-border-color);
+    color: var(--cui-body-color);
+
+    &:hover {
+      background-color: var(--cui-tertiary-bg);
+      border-color: var(--cui-border-color);
+      color: var(--cui-body-color);
+    }
+  }
+}
+
+.pipeline-list {
+  padding: 0 1.5rem 1.5rem;
+
+  .pipeline-card {
+    padding: 1.25rem;
+    border-radius: 0.75rem;
+    background-color: var(--cui-card-bg);
+    border: 1px solid var(--cui-border-color);
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+    will-change: transform, box-shadow;
+    transform: translateZ(0); /* Force GPU acceleration */
+    backface-visibility: hidden; /* Prevent flickering in some browsers */
+
+    &:hover {
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      transform: translateY(-2px);
+    }
+  }
+
+  .pipeline-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+
+    &.status-idle {
+      background-color: var(--cui-secondary);
+    }
+
+    &.status-running {
+      background-color: var(--cui-primary);
+      animation: pulse 2s infinite;
+      will-change: transform, box-shadow;
+      transform: translateZ(0); /* Force GPU acceleration */
+    }
+
+    &.status-succeeded {
+      background-color: var(--cui-success);
+    }
+
+    &.status-failed {
+      background-color: var(--cui-danger);
+    }
+
+    &.status-canceled {
+      background-color: var(--cui-warning);
+    }
+
+    &.status-waiting_approval {
+      background-color: var(--cui-info);
+    }
+  }
+
+  .pipeline-env {
+    .env-badge {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 2rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+
+      &.env-production {
+        background-color: rgba(var(--cui-danger-rgb), 0.1);
+        color: var(--cui-danger);
+      }
+
+      &.env-staging {
+        background-color: rgba(var(--cui-warning-rgb), 0.1);
+        color: var(--cui-warning);
+      }
+
+      &.env-development {
+        background-color: rgba(var(--cui-info-rgb), 0.1);
+        color: var(--cui-info);
+      }
+    }
+  }
+
+  .pipeline-status {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.25rem;
+
+    .status-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 0.5rem;
+
+      &.status-idle {
+        background-color: var(--cui-secondary);
+      }
+
+      &.status-running {
+        background-color: var(--cui-primary);
+        animation: pulse 2s infinite;
+        will-change: transform, box-shadow;
+        transform: translateZ(0); /* Force GPU acceleration */
+      }
+
+      &.status-succeeded {
+        background-color: var(--cui-success);
+      }
+
+      &.status-failed {
+        background-color: var(--cui-danger);
+      }
+
+      &.status-canceled {
+        background-color: var(--cui-warning);
+      }
+
+      &.status-waiting_approval {
+        background-color: var(--cui-info);
+      }
+    }
+
+    .status-text {
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+  }
+
+  .pipeline-time {
+    margin-left: 1rem;
+  }
+
+  .approval-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+}
+
+// Pipeline Stages Preview
+.pipeline-stages-preview {
+  .stage-progress-container {
+    position: relative;
+    padding: 1.5rem 0 0.5rem;
+  }
+
+  .stage-progress-bar {
+    height: 4px;
+    background-color: var(--cui-border-color);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+
+    .stage-progress {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background: linear-gradient(90deg, var(--cui-primary), var(--cui-info));
+      border-radius: 2px;
+      transition: width 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+      will-change: width;
+      transform: translateZ(0); /* Force GPU acceleration */
+    }
+  }
+
+  .stage-markers {
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    .stage-marker {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transform: translateY(-50%);
+
+      .stage-marker-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: var(--cui-secondary);
+        margin-bottom: 0.5rem;
+        border: 2px solid white;
+      }
+
+      .stage-marker-label {
+        font-size: 0.75rem;
+        white-space: nowrap;
+        color: var(--cui-body-color);
+      }
+
+      &.status-running {
+        .stage-marker-dot {
+          background-color: var(--cui-primary);
+          animation: pulse 2s infinite;
+          will-change: transform, box-shadow;
+          transform: translateZ(0); /* Force GPU acceleration */
+        }
+      }
+
+      &.status-succeeded {
+        .stage-marker-dot {
+          background-color: var(--cui-success);
+        }
+      }
+
+      &.status-failed {
+        .stage-marker-dot {
+          background-color: var(--cui-danger);
+        }
+      }
+
+      &.status-waiting_approval {
+        .stage-marker-dot {
+          background-color: var(--cui-info);
+        }
+      }
+    }
+  }
+}
+
+// Empty state
+.empty-state {
+  .empty-state-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: var(--cui-tertiary-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    color: var(--cui-secondary);
+  }
+}
+
+// Approval pulse animation
+.approval-pulse {
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(var(--cui-success-rgb), 0.7);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(var(--cui-success-rgb), 0.2);
+    transform: scale(1.05);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(var(--cui-success-rgb), 0);
+    transform: scale(1);
+  }
+}
+
+// Dark mode adjustments
+:host-context(.dark-theme) {
+  .pipeline-card {
+    background-color: var(--cui-card-bg);
+    border-color: var(--cui-border-color);
+
+    &:hover {
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  .stage-marker .stage-marker-dot {
+    border-color: var(--cui-body-bg);
+  }
+}
+
+/* Button styles for run pipeline and approval buttons */
+.pipeline-run-btn,
+.pipeline-run-btn-small,
+.approval-btn {
+  position: relative;
+  min-width: 100px;
+  transition: background-color 0.3s ease;
+
+  .btn-content {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px; /* Fixed height to prevent layout shifts */
+  }
+
+  .btn-icon {
+    margin-right: 0.5rem;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+  }
+
+  .btn-spinner {
+    position: absolute;
+    left: 0;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .btn-text-idle {
+    display: block;
+  }
+
+  .btn-text-running {
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  /* When button is in running state */
+  &.running,
+  &.approving {
+    .btn-icon {
+      opacity: 0;
+    }
+
+    .btn-spinner {
+      opacity: 1;
+    }
+
+    .btn-text-idle {
+      opacity: 0;
+    }
+
+    .btn-text-running {
+      opacity: 1;
+    }
+  }
+}
+
+/* Smaller run button in the pipeline list */
+.pipeline-run-btn-small {
+  min-width: 80px;
+
+  .btn-content {
+    height: 20px;
+  }
+
+  .btn-text {
+    margin-left: 0.25rem;
+  }
+}

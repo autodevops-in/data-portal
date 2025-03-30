@@ -1,11 +1,33 @@
-<div class="mb-4">
-  <h1 class="mb-3">DevOps Dashboard</h1>
-  <p *ngIf="auth.user$ | async as user" class="lead">Welcome {{user.name}}</p>
-  <p class="text-muted">Monitor your DevOps metrics and performance indicators in real-time</p>
+<!-- Project-specific breadcrumb -->
+<c-breadcrumb class="mb-4" *ngIf="currentProject">
+  <c-breadcrumb-item>
+    <a [routerLink]="['/projects']">Projects</a>
+  </c-breadcrumb-item>
+  <c-breadcrumb-item class="active">{{ currentProject.name }}</c-breadcrumb-item>
+</c-breadcrumb>
+
+<!-- Modern Dashboard Header -->
+<app-dashboard-header></app-dashboard-header>
+
+<!-- Project Navigation Buttons -->
+<div class="d-flex justify-content-end mb-4" *ngIf="currentProject">
+  <div class="d-flex gap-2">
+    <a [routerLink]="['/pipelines/project', currentProject.id]" class="ai-btn ai-btn-outline-primary">
+      <svg cIcon name="cilSettings" class="me-2"></svg>
+      Pipelines
+    </a>
+    <a [routerLink]="['/projects']" class="ai-btn ai-btn-outline-secondary">
+      <svg cIcon name="cilFolderOpen" class="me-2"></svg>
+      All Projects
+    </a>
+  </div>
 </div>
 
 <!-- DevOps Metrics Widgets -->
 <app-widgets-dropdown />
+
+<!-- Pipeline Management -->
+<app-pipeline-management></app-pipeline-management>
 
 <!-- Pipeline Performance Chart -->
 <c-card class="my-4">
@@ -16,8 +38,9 @@
         <div class="small text-body-secondary">January - December 2023</div>
       </c-col>
       <c-col class="d-none d-md-block" sm="7">
-        <button cButton class="float-end" color="primary" aria-label="Download">
-          <svg cIcon name="cilCloudDownload"></svg>
+        <button class="ai-btn ai-btn-primary float-end" aria-label="Download">
+          <svg cIcon name="cilCloudDownload" class="me-2"></svg>
+          Download
         </button>
         <form [formGroup]="trafficRadioGroup">
           <c-button-group class="float-end me-3" role="group">
@@ -30,10 +53,7 @@
             />
             <label
               (click)="setTrafficPeriod('Day')"
-              cButton
-              cFormCheckLabel
-              color="secondary"
-              variant="outline"
+              class="ai-btn ai-btn-outline-secondary"
               for="dayRadio"
             >
               Day
@@ -47,10 +67,7 @@
             />
             <label
               (click)="setTrafficPeriod('Month')"
-              cButton
-              cFormCheckLabel
-              color="secondary"
-              variant="outline"
+              class="ai-btn ai-btn-outline-secondary"
               for="radioMonth"
             >
               Month
@@ -64,10 +81,7 @@
             />
             <label
               (click)="setTrafficPeriod('Year')"
-              cButton
-              cFormCheckLabel
-              color="secondary"
-              variant="outline"
+              class="ai-btn ai-btn-outline-secondary"
               for="radioYear"
             >
               Year
@@ -135,7 +149,9 @@
       <c-card-header>CI/CD Pipeline Analytics</c-card-header>
       <c-card-body>
         <c-row>
+          <!-- Pipeline Metrics Column -->
           <c-col md="6" xl="6" xs="12">
+            <!-- Pipeline Metrics Summary -->
             <c-row>
               <c-col xs="6">
                 <div class="border-start border-start-4 border-start-info py-1 px-3 mb-3">
@@ -152,52 +168,29 @@
                 </div>
               </c-col>
             </c-row>
+
             <hr class="mt-0" />
-            <div class="progress-group mb-4">
-              <div class="progress-group-prepend">
-                <span class="text-body-secondary small">Build Stage</span>
+
+            <!-- Pipeline Stage Success/Failure Rates -->
+            <ng-container *ngFor="let stage of [
+              {name: 'Build Stage', success: 94, failure: 6},
+              {name: 'Test Stage', success: 88, failure: 12},
+              {name: 'Security Scan', success: 91, failure: 9},
+              {name: 'Deployment', success: 95, failure: 5},
+              {name: 'Integration Tests', success: 87, failure: 13}
+            ]">
+              <div class="progress-group mb-4">
+                <div class="progress-group-prepend">
+                  <span class="text-body-secondary small">{{ stage.name }}</span>
+                </div>
+                <div class="progress-group-bars">
+                  <c-progress thin color="info" [value]="stage.success" [attr.aria-label]="stage.name + ' success'" />
+                  <c-progress thin color="danger" [value]="stage.failure" [attr.aria-label]="stage.name + ' failure'" />
+                </div>
               </div>
-              <div class="progress-group-bars">
-                <c-progress thin color="info" value="94" aria-label="Build stage success" />
-                <c-progress thin color="danger" value="6" aria-label="Build stage failure" />
-              </div>
-            </div>
-            <div class="progress-group mb-4">
-              <div class="progress-group-prepend">
-                <span class="text-body-secondary small">Test Stage</span>
-              </div>
-              <div class="progress-group-bars">
-                <c-progress thin color="info" value="88" aria-label="Test stage success" />
-                <c-progress thin color="danger" value="12" aria-label="Test stage failure" />
-              </div>
-            </div>
-            <div class="progress-group mb-4">
-              <div class="progress-group-prepend">
-                <span class="text-body-secondary small">Security Scan</span>
-              </div>
-              <div class="progress-group-bars">
-                <c-progress thin color="info" value="91" aria-label="Security scan success" />
-                <c-progress thin color="danger" value="9" aria-label="Security scan failure" />
-              </div>
-            </div>
-            <div class="progress-group mb-4">
-              <div class="progress-group-prepend">
-                <span class="text-body-secondary small">Deployment</span>
-              </div>
-              <div class="progress-group-bars">
-                <c-progress thin color="info" value="95" aria-label="Deployment success" />
-                <c-progress thin color="danger" value="5" aria-label="Deployment failure" />
-              </div>
-            </div>
-            <div class="progress-group mb-4">
-              <div class="progress-group-prepend">
-                <span class="text-body-secondary small">Integration Tests</span>
-              </div>
-              <div class="progress-group-bars">
-                <c-progress thin color="info" value="87" aria-label="Integration tests success" />
-                <c-progress thin color="danger" value="13" aria-label="Integration tests failure" />
-              </div>
-            </div>
+            </ng-container>
+
+            <!-- Legend -->
             <div class="legend text-center d-none d-md-block" ngPreserveWhitespaces>
               <small>
                 <sup>
@@ -213,7 +206,9 @@
             </div>
           </c-col>
 
+          <!-- Performance Metrics Column -->
           <c-col md="6" xl="6" xs="12">
+            <!-- Time Metrics Summary -->
             <c-row>
               <c-col xs="6">
                 <div class="border-start border-start-4 border-start-warning py-1 px-3 mb-3">
@@ -231,63 +226,27 @@
 
             <hr class="mt-0" />
 
-            <div class="progress-group mb-4">
-              <div class="progress-group-header">
-                <svg cIcon class="icon icon-lg me-2" name="cilCode"></svg>
-                <span>Code Quality</span>
-                <span class="ms-auto font-semibold">A</span>
+            <!-- Quality Metrics -->
+            <ng-container *ngFor="let metric of [
+              {name: 'Code Quality', value: 90, color: 'success', icon: 'cilCode', label: 'A'},
+              {name: 'Security Score', value: 85, color: 'success', icon: 'cilShieldAlt', label: 'A-'},
+              {name: 'Performance', value: 78, color: 'warning', icon: 'cilSpeedometer', label: 'B+ (78%)'},
+              {name: 'Test Coverage', value: 82, color: 'info', icon: 'cilTask', label: '82.4% (↑3.5%)'},
+              {name: 'Infrastructure Health', value: 97, color: 'success', icon: 'cilSettings', label: '97.3% (↑1.2%)'}
+            ]">
+              <div class="progress-group mb-4">
+                <div class="progress-group-header">
+                  <svg cIcon class="icon icon-lg me-2" [name]="metric.icon"></svg>
+                  <span>{{ metric.name }}</span>
+                  <span class="ms-auto font-semibold" [innerHTML]="metric.label"></span>
+                </div>
+                <div class="progress-group-bars">
+                  <c-progress thin [color]="metric.color" [value]="metric.value" [attr.aria-label]="metric.name" />
+                </div>
               </div>
-              <div class="progress-group-bars">
-                <c-progress thin color="success" value="90" aria-label="Code quality" />
-              </div>
-            </div>
-            <div class="progress-group mb-4">
-              <div class="progress-group-header">
-                <svg cIcon class="icon icon-lg me-2" name="cilShieldAlt"></svg>
-                <span>Security Score</span>
-                <span class="ms-auto font-semibold">A-</span>
-              </div>
-              <div class="progress-group-bars">
-                <c-progress thin color="success" value="85" aria-label="Security score" />
-              </div>
-            </div>
+            </ng-container>
 
-            <div class="progress-group mb-4">
-              <div class="progress-group-header">
-                <svg cIcon class="icon icon-lg me-2" name="cilSpeedometer"></svg>
-                <span>Performance</span>
-                <span class="ms-auto font-semibold">
-                  B+ <span class="text-body-secondary small">(78%)</span>
-                </span>
-              </div>
-              <div class="progress-group-bars">
-                <c-progress thin color="warning" value="78" aria-label="Performance score" />
-              </div>
-            </div>
-            <div class="progress-group mb-4">
-              <div class="progress-group-header">
-                <svg cIcon class="icon icon-lg me-2" name="cilTask"></svg>
-                <span>Test Coverage</span>
-                <span class="ms-auto font-semibold">
-                  82.4% <span class="text-body-secondary small">(↑3.5%)</span>
-                </span>
-              </div>
-              <div class="progress-group-bars">
-                <c-progress thin color="info" value="82" aria-label="Test coverage" />
-              </div>
-            </div>
-            <div class="progress-group mb-4">
-              <div class="progress-group-header">
-                <svg cIcon class="icon icon-lg me-2" name="cilSettings"></svg>
-                <span>Infrastructure Health</span>
-                <span class="ms-auto font-semibold">
-                  97.3% <span class="text-body-secondary small">(↑1.2%)</span>
-                </span>
-              </div>
-              <div class="progress-group-bars">
-                <c-progress thin color="success" value="97" aria-label="Infrastructure health" />
-              </div>
-            </div>
+            <!-- Options Button -->
             <div class="divider d-flex justify-content-center">
               <button
                 cButton
@@ -307,73 +266,9 @@
   </c-col>
 </c-row>
 
-<!-- Recent Deployments Table -->
+<!-- Pipeline Runs Table -->
 <c-row>
   <c-col xs>
-    <c-card class="mb-4">
-      <c-card-header>Recent Deployments</c-card-header>
-      <c-card-body>
-        <table
-          [hover]="true"
-          [responsive]="true"
-          [striped]="true"
-          align="middle"
-          cTable
-          class="mb-0 border"
-        >
-          <thead class="text-nowrap text-truncate">
-          <tr>
-            <th class="bg-body-tertiary">Project</th>
-            <th class="bg-body-tertiary text-center">Environment</th>
-            <th class="bg-body-tertiary">Status</th>
-            <th class="bg-body-tertiary text-center">Deployed By</th>
-            <th class="bg-body-tertiary">Timestamp</th>
-          </tr>
-          </thead>
-          <tbody>
-            @for (user of users; track user.name; let i = $index) {
-              <tr>
-                <td>
-                  <div>Project {{ i + 1 }}</div>
-                  <div class="small text-body-secondary text-nowrap">
-                  <span>
-                    v{{ 1 + (i * 0.1).toFixed(1) }} | Build #{{ 100 + i }}
-                  </span>
-                  </div>
-                </td>
-                <td class="text-center">
-                  <span class="badge text-bg-{{ i % 3 === 0 ? 'primary' : (i % 2 === 0 ? 'success' : 'info') }}">
-                    {{ i % 3 === 0 ? 'Production' : (i % 2 === 0 ? 'Staging' : 'Development') }}
-                  </span>
-                </td>
-                <td>
-                  <div class="d-flex justify-content-between">
-                    <div class="float-start">
-                      <strong>{{ i % 4 === 0 ? 'Failed' : (i % 3 === 0 ? 'In Progress' : 'Success') }}</strong>
-                    </div>
-                    <div class="float-end ms-1 text-nowrap">
-                      <small class="text-body-secondary">
-                        {{ user.period }}
-                      </small>
-                    </div>
-                  </div>
-                  <c-progress thin [value]="i % 4 === 0 ? 25 : (i % 3 === 0 ? 60 : 100)" [color]="i % 4 === 0 ? 'danger' : (i % 3 === 0 ? 'warning' : 'success')" aria-label="Deployment status" />
-                </td>
-                <td class="text-center">
-                  <div class="d-flex align-items-center justify-content-center">
-                    <c-avatar [size]="'sm'" src="{{ user.avatar }}" [status]="i % 2 === 0 ? 'success' : (i % 3 === 0 ? 'warning' : 'danger')" class="me-2" />
-                    <span>{{ user.name }}</span>
-                  </div>
-                </td>
-                <td>
-                  <div class="small text-body-secondary">Deployed</div>
-                  <div class="fw-semibold text-nowrap">{{ user.activity }}</div>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </c-card-body>
-    </c-card>
+    <app-pipeline-runs [limit]="6"></app-pipeline-runs>
   </c-col>
 </c-row>

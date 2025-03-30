@@ -1,0 +1,149 @@
+<div class="ai-card mb-4">
+  <!-- Breadcrumb navigation -->
+  <c-breadcrumb class="mb-4" *ngIf="projectId">
+    <c-breadcrumb-item>
+      <a [routerLink]="['/projects']">Projects</a>
+    </c-breadcrumb-item>
+    <c-breadcrumb-item *ngIf="currentProject">
+      <a [routerLink]="['/dashboard/project', projectId]">{{ currentProject.name }}</a>
+    </c-breadcrumb-item>
+    <c-breadcrumb-item class="active">Pipelines</c-breadcrumb-item>
+  </c-breadcrumb>
+
+  <div class="pipeline-header d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">
+      <span *ngIf="!projectId">All Pipelines</span>
+      <span *ngIf="projectId && currentProject">{{ currentProject.name }} Pipelines</span>
+    </h2>
+    <button class="ai-btn ai-btn-primary" (click)="openCreatePipelineModal()">
+      <svg cIcon name="cilPlus" class="me-2"></svg>
+      New Pipeline
+    </button>
+  </div>
+
+  <div class="pipeline-list">
+    <div class="pipeline-card" *ngFor="let pipeline of pipelines">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <h5 class="mb-1">{{ pipeline.name }}</h5>
+          <p class="text-muted mb-0 small">{{ pipeline.description }}</p>
+        </div>
+        <div class="col-md-2">
+          <span class="env-badge" [ngClass]="'env-' + pipeline.environment.toLowerCase()">
+            {{ pipeline.environment }}
+          </span>
+        </div>
+        <div class="col-md-2">
+          <span class="status-indicator" [ngClass]="'status-' + pipeline.status"></span>
+          <span class="status-text">{{ getStatusText(pipeline.status) }}</span>
+        </div>
+        <div class="col-md-2">
+          <a [routerLink]="['/pipelines', pipeline.id]" class="ai-btn ai-btn-light">
+            <svg cIcon name="cilArrowRight"></svg>
+          </a>
+          <!-- Add Approve button if approval is required -->
+          <button
+            *ngIf="pipeline.approvalRequired"
+            class="ai-btn ai-btn-success ms-2"
+            (click)="openApprovalModal(pipeline)">
+            <svg cIcon name="cilCheck" class="me-1"></svg>
+            Approve
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Approval Modal -->
+<c-modal 
+  [visible]="approvalModalVisible" 
+  (visibleChange)="approvalModalVisible = $event"
+  alignment="center"
+>
+  <c-modal-header>
+    <h5 cModalTitle>Pipeline Approval</h5>
+  </c-modal-header>
+  <c-modal-body *ngIf="selectedPipeline">
+    <div class="mb-3">
+      <h6>{{ selectedPipeline.name }}</h6>
+      <p>{{ selectedPipeline.description }}</p>
+    </div>
+    <div class="alert alert-warning">
+      <svg cIcon name="cilWarning" class="me-2"></svg>
+      You are about to approve a deployment to <strong>{{ selectedPipeline.environment }}</strong> environment.
+    </div>
+    <p>Are you sure you want to approve this pipeline?</p>
+  </c-modal-body>
+  <c-modal-footer>
+    <div class="position-relative w-100">
+      <!-- Overlay spinner during approval -->
+      <div *ngIf="isApproving" class="approval-overlay">
+        <c-spinner size="sm"></c-spinner>
+      </div>
+      <div class="d-flex justify-content-end">
+        <button 
+          cButton 
+          color="secondary" 
+          (click)="closeApprovalModal()" 
+          [disabled]="isApproving">
+          Cancel
+        </button>
+        <button
+          cButton
+          color="danger"
+          [disabled]="isApproving"
+          (click)="approvePipeline(false)">
+          <span *ngIf="!isApproving">Reject</span>
+        </button>
+        <button
+          cButton
+          color="success"
+          [disabled]="isApproving"
+          (click)="approvePipeline(true)">
+          <span *ngIf="!isApproving">Approve</span>
+        </button>
+      </div>
+    </div>
+  </c-modal-footer>
+</c-modal>
+
+<!-- Run Pipeline Modal -->
+<c-modal 
+  [visible]="runPipelineModalVisible" 
+  (visibleChange)="runPipelineModalVisible = $event"
+  alignment="center"
+>
+  <c-modal-header>
+    <h5 cModalTitle>Run Pipeline</h5>
+  </c-modal-header>
+  <c-modal-body *ngIf="selectedPipeline">
+    <div class="mb-3">
+      <h6>{{ selectedPipeline.name }}</h6>
+      <p>{{ selectedPipeline.description }}</p>
+    </div>
+    <div class="alert" [ngClass]="{'alert-danger': selectedPipeline.environment === 'Production', 'alert-warning': selectedPipeline.environment === 'Staging', 'alert-info': selectedPipeline.environment === 'Development'}">
+      <svg cIcon name="cilInfo" class="me-2"></svg>
+      You are about to run a pipeline in the <strong>{{ selectedPipeline.environment }}</strong> environment.
+    </div>
+    <p>Are you sure you want to run this pipeline?</p>
+  </c-modal-body>
+  <c-modal-footer>
+    <button cButton color="secondary" (click)="closeRunPipelineModal()">
+      Cancel
+    </button>
+    <button
+      cButton
+      color="primary"
+      class="pipeline-run-btn"
+      [class.running]="isRunningPipeline"
+      (click)="runPipeline()"
+      [disabled]="isRunningPipeline">
+      <div class="btn-content">
+        <c-spinner size="sm" class="btn-spinner"></c-spinner>
+        <span class="btn-text-idle">Run Pipeline</span>
+        <span class="btn-text-running">Running...</span>
+      </div>
+    </button>
+  </c-modal-footer>
+</c-modal>
