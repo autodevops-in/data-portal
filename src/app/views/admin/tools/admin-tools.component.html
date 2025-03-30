@@ -1,0 +1,107 @@
+<div class="animated fadeIn">
+  <div class="toast-container position-fixed top-0 end-0 p-3">
+    <c-toast [visible]="showToast" [color]="toastColor" [delay]="3000" auto-hide>
+      <c-toast-header>
+        <strong class="me-auto">Notification</strong>
+      </c-toast-header>
+      <c-toast-body>{{ toastMessage }}</c-toast-body>
+    </c-toast>
+  </div>
+
+  <c-card>
+    <c-card-header class="d-flex justify-content-between align-items-center">
+      <h5>Tool Management</h5>
+      <button cButton color="primary" (click)="openModal(false)">
+        <svg cIcon name="cilPlus" size="sm" class="me-1"></svg>
+        Add Tool
+      </button>
+    </c-card-header>
+    <c-card-body>
+      <table cTable hover responsive>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Type</th>
+            <th>Created At</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let tool of tools">
+            <td>
+              <div class="d-flex align-items-center">
+                <svg *ngIf="tool.icon" cIcon [name]="tool.icon" size="lg" class="me-2"></svg>
+                {{ tool.name }}
+              </div>
+            </td>
+            <td>{{ tool.description }}</td>
+            <td>{{ tool.type }}</td>
+            <td>{{ tool.createdAt | date }}</td>
+            <td>
+              <button cButton color="primary" size="sm" class="me-1" (click)="openModal(true, tool)">
+                <svg cIcon name="cilPencil" size="sm"></svg>
+              </button>
+              <button cButton color="danger" size="sm" (click)="deleteTool(tool)">
+                <svg cIcon name="cilTrash" size="sm"></svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </c-card-body>
+  </c-card>
+
+  <!-- Tool Modal -->
+  <c-modal [visible]="showModal" (visibleChange)="showModal = $event">
+    <c-modal-header>
+      <h5 cModalTitle>{{ isEditMode ? 'Edit Tool' : 'Add New Tool' }}</h5>
+    </c-modal-header>
+    <c-modal-body>
+      <form [formGroup]="toolForm">
+        <div class="mb-3">
+          <label cLabel for="name">Tool Name</label>
+          <input cFormControl id="name" formControlName="name" placeholder="Enter tool name" />
+          <div *ngIf="toolForm.get('name')?.invalid && toolForm.get('name')?.touched" class="text-danger">
+            Tool name is required
+          </div>
+        </div>
+        <div class="mb-3">
+          <label cLabel for="description">Description</label>
+          <textarea cFormControl id="description" formControlName="description" rows="3" placeholder="Enter tool description"></textarea>
+          <div *ngIf="toolForm.get('description')?.invalid && toolForm.get('description')?.touched" class="text-danger">
+            Description is required
+          </div>
+        </div>
+        <div class="mb-3">
+          <label cLabel for="type">Type</label>
+          <select cSelect id="type" formControlName="type">
+            <option value="">Select a type</option>
+            <option value="SCM">Source Code Management</option>
+            <option value="CI/CD">CI/CD</option>
+            <option value="Cloud">Cloud Provider</option>
+            <option value="Monitoring">Monitoring</option>
+            <option value="Security">Security</option>
+            <option value="Other">Other</option>
+          </select>
+          <div *ngIf="toolForm.get('type')?.invalid && toolForm.get('type')?.touched" class="text-danger">
+            Type is required
+          </div>
+        </div>
+        <div class="mb-3">
+          <label cLabel for="icon">Icon</label>
+          <input cFormControl id="icon" formControlName="icon" placeholder="Enter icon name (e.g., cilCode)" />
+          <small class="form-text text-muted">Use CoreUI icon names (e.g., cilCode, cilSettings)</small>
+        </div>
+      </form>
+    </c-modal-body>
+    <c-modal-footer>
+      <button cButton color="secondary" (click)="closeModal()">
+        Cancel
+      </button>
+      <button cButton color="primary" (click)="saveTool()" [disabled]="toolForm.invalid">
+        {{ isEditMode ? 'Update' : 'Create' }}
+      </button>
+    </c-modal-footer>
+  </c-modal>
+</div>

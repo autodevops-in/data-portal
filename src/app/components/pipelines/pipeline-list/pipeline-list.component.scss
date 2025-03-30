@@ -64,11 +64,16 @@
 }
 
 /* Button styles for run pipeline and approval buttons */
-.pipeline-run-btn,
-.pipeline-run-btn-small,
-.approval-btn {
+@mixin button-styles($min-width, $height) {
+  min-width: $min-width;
+  .btn-content {
+    height: $height;
+  }
+}
+
+.pipeline-run-btn {
+  @include button-styles(100px, 24px);
   position: relative;
-  min-width: 100px;
   transition: background-color 0.3s ease;
 
   .btn-content {
@@ -76,7 +81,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 24px; /* Fixed height to prevent layout shifts */
   }
 
   .btn-icon {
@@ -128,13 +132,19 @@
 
 /* Smaller run button in the pipeline list */
 .pipeline-run-btn-small {
-  min-width: 80px;
+  @include button-styles(80px, 20px);
 
   .btn-content {
-    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .btn-text {
     margin-left: 0.25rem;
   }
 }
+
+// Review and remove unused styles or refactor repetitive styles into mixins or variables.
+// Example:
+// @include shared-style();

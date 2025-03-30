@@ -1,3 +1,35 @@
+// Define reusable mixins and variables
+@mixin card-border($color) {
+  border-left: 4px solid $color;
+}
+
+@mixin card-header-bg($color) {
+  background-color: rgba($color, 0.1);
+}
+
+@mixin tips-content-style($color, $bg-color) {
+  background-color: $bg-color;
+  padding: 1rem;
+  border-radius: 0 0 4px 4px;
+  border-left: 4px solid $color;
+  color: var(--cui-body-color);
+}
+
+@mixin text-info-style($color, $bg-color) {
+  font-size: 0.9rem;
+  color: $color;
+  background-color: $bg-color;
+  padding: 0.75rem;
+  border-radius: 4px;
+  border-left: 3px solid $color;
+}
+
+// Variables
+$devsecops-color: #20a8d8;
+$devops-color: #4dbd74;
+$info-bg-color: rgba(32, 168, 216, 0.05);
+$card-bg-color: var(--cui-card-bg, #f8f9fa);
+
 .code-container {
   border-radius: 4px;
   border: 1px solid #dee2e6;
@@ -17,14 +49,14 @@ button[title="Copy to clipboard"] {
   align-items: center;
   gap: 5px;
   transition: background-color 0.2s;
-}
 
-button[title="Copy to clipboard"]:hover {
-  background-color: #e9ecef;
-}
+  &:hover {
+    background-color: #e9ecef;
+  }
 
-button[title="Copy to clipboard"] svg {
-  margin-right: 4px;
+  svg {
+    margin-right: 4px;
+  }
 }
 
 textarea {
@@ -41,62 +73,53 @@ textarea {
 .sample-prompt-card {
   height: 100%;
   transition: transform 0.2s, box-shadow 0.2s;
-}
 
-.sample-prompt-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
 
-.sample-prompt-card c-card-body {
-  display: flex;
-  flex-direction: column;
-}
+  c-card-body {
+    display: flex;
+    flex-direction: column;
+  }
 
-.sample-prompt-card p {
-  flex-grow: 1;
-  margin-bottom: 1rem;
+  p {
+    flex-grow: 1;
+    margin-bottom: 1rem;
+  }
 }
 
 .devsecops-card {
-  border-left: 4px solid #20a8d8;
-}
+  @include card-border($devsecops-color);
 
-.devsecops-card c-card-header {
-  background-color: rgba(32, 168, 216, 0.1);
+  c-card-header {
+    @include card-header-bg($devsecops-color);
+  }
 }
 
 .devops-card {
-  border-left: 4px solid #4dbd74;
-}
+  @include card-border($devops-color);
 
-.devops-card c-card-header {
-  background-color: rgba(77, 189, 116, 0.1);
+  c-card-header {
+    @include card-header-bg($devops-color);
+  }
 }
 
 .tips-content {
-  background-color: var(--cui-card-bg, #f8f9fa);
-  padding: 1rem;
-  border-radius: 0 0 4px 4px;
-  border-left: 4px solid #20a8d8;
-  color: var(--cui-body-color);
-}
+  @include tips-content-style($devsecops-color, $card-bg-color);
 
-.tips-content ul {
-  padding-left: 1.5rem;
-}
+  ul {
+    padding-left: 1.5rem;
+  }
 
-.tips-content li {
-  margin-bottom: 0.5rem;
-}
+  li {
+    margin-bottom: 0.5rem;
+  }
 
-.tips-content p.text-info {
-  font-size: 0.9rem;
-  color: var(--cui-info, #20a8d8);
-  background-color: var(--cui-info-bg-subtle, rgba(32, 168, 216, 0.05));
-  padding: 0.75rem;
-  border-radius: 4px;
-  border-left: 3px solid #20a8d8;
+  p.text-info {
+    @include text-info-style(var(--cui-info, $devsecops-color), var(--cui-info-bg-subtle, $info-bg-color));
+  }
 }
 
 c-accordion-item {
@@ -109,11 +132,11 @@ c-accordion-item {
   background-color: var(--cui-card-cap-bg, rgba(32, 168, 216, 0.1));
   color: var(--cui-body-color);
   font-weight: 500;
-}
 
-::ng-deep .accordion-button:not(.collapsed) {
-  background-color: var(--cui-primary-bg-subtle, rgba(32, 168, 216, 0.2));
-  color: var(--cui-body-color);
+  &:not(.collapsed) {
+    background-color: var(--cui-primary-bg-subtle, rgba(32, 168, 216, 0.2));
+    color: var(--cui-body-color);
+  }
 }
 
 /* Additional classes for accordion header */

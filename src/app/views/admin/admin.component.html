@@ -1,0 +1,46 @@
+<div class="animated fadeIn">
+  <!-- Loading state -->
+  <div *ngIf="isLoading" class="text-center p-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-3">Checking permissions...</p>
+  </div>
+
+  <!-- Access denied message -->
+  <c-alert *ngIf="!isLoading && !isAdmin" color="danger">
+    <h4 class="alert-heading">Access Denied</h4>
+    <p>You do not have permission to access the admin area.</p>
+    <hr>
+    <p class="mb-0">Please contact your administrator if you believe this is an error.</p>
+  </c-alert>
+
+  <!-- Admin dashboard content -->
+  <c-card *ngIf="!isLoading && isAdmin" class="mb-4">
+    <c-card-header>
+      <h4>Admin Dashboard</h4>
+    </c-card-header>
+    <c-card-body>
+      <c-nav variant="tabs">
+        <c-nav-item>
+          <a [cNavLink]="activeTabIndex === 0" (click)="setActiveTab(0)" [routerLink]="['./projects']">
+            Projects
+          </a>
+        </c-nav-item>
+        <c-nav-item>
+          <a [cNavLink]="activeTabIndex === 1" (click)="setActiveTab(1)" [routerLink]="['./tools']">
+            Tools
+          </a>
+        </c-nav-item>
+        <c-nav-item>
+          <a [cNavLink]="activeTabIndex === 2" (click)="setActiveTab(2)" [routerLink]="['./credentials']">
+            Credentials
+          </a>
+        </c-nav-item>
+      </c-nav>
+      <div class="tab-content">
+        <router-outlet></router-outlet>
+      </div>
+    </c-card-body>
+  </c-card>
+</div>

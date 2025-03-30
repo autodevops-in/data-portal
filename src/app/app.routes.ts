@@ -28,6 +28,15 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
       },
       {
+        path: 'admin',
+        loadChildren: () => import('./views/admin/routes').then((m) => m.routes),
+        canActivate: [AuthGuard],
+        data: {
+          title: 'Admin',
+          requiredPermission: 'user:admin'
+        }
+      },
+      {
         path: 'theme',
         loadChildren: () => import('./views/theme/routes').then((m) => m.routes)
       },

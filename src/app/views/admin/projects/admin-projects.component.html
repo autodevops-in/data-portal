@@ -1,0 +1,105 @@
+<div class="animated fadeIn">
+  <div class="toast-container position-fixed top-0 end-0 p-3">
+    <c-toast [visible]="showToast" [color]="toastColor" [delay]="3000" auto-hide>
+      <c-toast-header>
+        <strong class="me-auto">Notification</strong>
+      </c-toast-header>
+      <c-toast-body>{{ toastMessage }}</c-toast-body>
+    </c-toast>
+  </div>
+
+  <c-card>
+    <c-card-header class="d-flex justify-content-between align-items-center">
+      <h5>Project Management</h5>
+      <button cButton color="primary" (click)="openModal(false)">
+        <svg cIcon name="cilPlus" size="sm" class="me-1"></svg>
+        Add Project
+      </button>
+    </c-card-header>
+    <c-card-body>
+      <table cTable hover responsive>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Repository URL</th>
+            <th>Parent Project</th>
+            <th>Created At</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let project of flatProjects">
+            <td>{{ project.name }}</td>
+            <td>{{ project.description }}</td>
+            <td>{{ project.repositoryUrl || 'N/A' }}</td>
+            <td>
+              <span *ngIf="project.parentId">
+                {{ (flatProjects | filter:'id':project.parentId)[0]?.name || 'N/A' }}
+              </span>
+              <span *ngIf="!project.parentId">N/A</span>
+            </td>
+            <td>{{ project.createdAt | date }}</td>
+            <td>
+              <button cButton color="primary" size="sm" class="me-1" (click)="openModal(true, project)">
+                <svg cIcon name="cilPencil" size="sm"></svg>
+              </button>
+              <button cButton color="danger" size="sm" (click)="deleteProject(project)">
+                <svg cIcon name="cilTrash" size="sm"></svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </c-card-body>
+  </c-card>
+
+  <!-- Project Modal -->
+  <c-modal [visible]="showModal" (visibleChange)="showModal = $event">
+    <c-modal-header>
+      <h5 cModalTitle>{{ isEditMode ? 'Edit Project' : 'Add New Project' }}</h5>
+    </c-modal-header>
+    <c-modal-body>
+      <form [formGroup]="projectForm">
+        <div class="mb-3">
+          <label cLabel for="name">Project Name</label>
+          <input cFormControl id="name" formControlName="name" placeholder="Enter project name" />
+          <div *ngIf="projectForm.get('name')?.invalid && projectForm.get('name')?.touched" class="text-danger">
+            Project name is required
+          </div>
+        </div>
+        <div class="mb-3">
+          <label cLabel for="description">Description</label>
+          <textarea cFormControl id="description" formControlName="description" rows="3" placeholder="Enter project description"></textarea>
+          <div *ngIf="projectForm.get('description')?.invalid && projectForm.get('description')?.touched" class="text-danger">
+            Description is required
+          </div>
+        </div>
+        <div class="mb-3">
+          <label cLabel for="repositoryUrl">Repository URL</label>
+          <input cFormControl id="repositoryUrl" formControlName="repositoryUrl" placeholder="Enter repository URL" />
+        </div>
+        <div class="mb-3">
+          <label cLabel for="parentId">Parent Project</label>
+          <select cSelect id="parentId" formControlName="parentId">
+            <option value="">None</option>
+            <option *ngFor="let project of flatProjects" [value]="project.id">{{ project.name }}</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label cLabel for="deploymentEnvironments">Deployment Environments</label>
+          <input cFormControl id="deploymentEnvironments" formControlName="deploymentEnvironments" placeholder="Enter environments (comma-separated)" />
+          <small class="form-text text-muted">Example: Development, Staging, Production</small>
+        </div>
+      </form>
+    </c-modal-body>
+    <c-modal-footer>
+      <button cButton color="secondary" (click)="closeModal()">
+        Cancel
+      </button>
+      <button cButton color="primary" (click)="saveProject()" [disabled]="projectForm.invalid">
+        {{ isEditMode ? 'Update' : 'Create' }}
+      </button>
+    </c-modal-footer>
+  </c-modal>
+</div>
