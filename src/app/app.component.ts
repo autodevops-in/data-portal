@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
   constructor(public auth: AuthService) {
     this.#titleService.setTitle(this.title);
     // iconSet singleton
-    this.#iconSetService.icons = { ...iconSubset };
+    this.#iconSetService.icons = { ...iconSubset }; // Ensure all icons are registered
     this.#colorModeService.localStorageItemName.set('coreui-free-angular-admin-template-theme-default');
     this.#colorModeService.eventName.set('ColorSchemeChange');
   }
