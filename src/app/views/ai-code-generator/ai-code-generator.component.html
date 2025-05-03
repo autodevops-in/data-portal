@@ -31,33 +31,33 @@
         {{ errorMessage }}
       </c-alert>
 
-      <!-- Tips for Writing Effective DevOps Prompts -->
+      <!-- Tips for Writing Effective Prompts -->
       <div *ngIf="isAuthenticated" class="mt-3 mb-4">
-        <c-accordion [flush]="true">
-          <c-accordion-item>
-            <ng-container c-accordion-header>
-              <div class="d-flex align-items-center">
-                <strong class="tips-header">Tips for Writing Effective DevOps Prompts</strong>
-                <span class="ms-2 text-muted tips-subheader">(Click to expand for better results)</span>
-              </div>
-            </ng-container>
-            <ng-container c-accordion-body>
-              <div class="tips-content">
-                <p class="mb-3">Follow these guidelines to get more accurate and useful DevOps code from the AI generator:</p>
-                <ul>
-                  <li><strong>Be specific about infrastructure:</strong> Mention cloud providers (AWS, Azure, GCP), container orchestration (Kubernetes, Docker Swarm), and specific services.</li>
-                  <li><strong>Define CI/CD requirements:</strong> Specify which CI/CD tools (Jenkins, GitHub Actions, GitLab CI) and what stages you need (build, test, deploy).</li>
-                  <li><strong>Include automation scope:</strong> Clarify what should be automated (infrastructure provisioning, testing, deployment, monitoring).</li>
-                  <li><strong>Specify configuration management:</strong> Mention tools like Ansible, Puppet, or Chef if you're using them.</li>
-                  <li><strong>Request monitoring setup:</strong> Ask for monitoring and alerting configurations (Prometheus, Grafana, ELK stack).</li>
-                  <li><strong>Include security requirements:</strong> Specify security scanning, compliance checks, and secure configuration needs.</li>
-                  <li><strong>Ask for documentation:</strong> Request inline comments and documentation for complex automation scripts.</li>
-                </ul>
-                <p class="mt-3 mb-0 text-info"><i>Example: "Create a GitHub Actions workflow for a Node.js application that includes build, test, security scanning with SonarQube, and deployment to AWS ECS with blue/green deployment strategy. Include proper error handling and notifications to Slack."</i></p>
-              </div>
-            </ng-container>
-          </c-accordion-item>
-        </c-accordion>
+        <c-card class="tips-card">
+          <c-card-header class="d-flex justify-content-between align-items-center tips-header-container" (click)="toggleTips()">
+            <div class="d-flex align-items-center">
+              <strong class="tips-header">Tips for Writing Effective DevOps Prompts</strong>
+              <span class="ms-2 text-muted tips-subheader">(Click to expand/collapse)</span>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="var(--cui-secondary, #6c757d)" [class]="showTips ? 'bi bi-chevron-up' : 'bi bi-chevron-down'" viewBox="0 0 16 16">
+              <path *ngIf="!showTips" fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+              <path *ngIf="showTips" fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/>
+            </svg>
+          </c-card-header>
+          <c-card-body *ngIf="showTips" class="tips-content">
+            <p class="mb-3">Follow these guidelines to get more accurate and useful DevOps code from the AI generator:</p>
+            <ul>
+              <li><strong>Be specific about infrastructure:</strong> Mention cloud providers (AWS, Azure, GCP), container orchestration (Kubernetes, Docker Swarm), and specific services.</li>
+              <li><strong>Define CI/CD requirements:</strong> Specify which CI/CD tools (Jenkins, GitHub Actions, GitLab CI) and what stages you need (build, test, deploy).</li>
+              <li><strong>Include automation scope:</strong> Clarify what should be automated (infrastructure provisioning, testing, deployment, monitoring).</li>
+              <li><strong>Specify configuration management:</strong> Mention tools like Ansible, Puppet, or Chef if you're using them.</li>
+              <li><strong>Request monitoring setup:</strong> Ask for monitoring and alerting configurations (Prometheus, Grafana, ELK stack).</li>
+              <li><strong>Include security requirements:</strong> Specify security scanning, compliance checks, and secure configuration needs.</li>
+              <li><strong>Ask for documentation:</strong> Request inline comments and documentation for complex automation scripts.</li>
+            </ul>
+            <p class="mt-3 mb-0 text-info"><i>Example: "Create a GitHub Actions workflow for a Node.js application that includes build, test, security scanning with SonarQube, and deployment to AWS ECS with blue/green deployment strategy. Include proper error handling and notifications to Slack."</i></p>
+          </c-card-body>
+        </c-card>
       </div>
 
       <form *ngIf="isAuthenticated">
@@ -87,11 +87,11 @@
         </c-row>
       </form>
 
-      <!-- DevOps and DevSecOps Sample Prompts Section -->
+      <!-- DevOps Sample Prompts Section -->
       <div *ngIf="isAuthenticated && !generatedCode" class="mt-4">
-        <h5>Sample Prompts</h5>
+        <h5>Effective DevOps Prompts</h5>
         <div class="sample-prompts">
-          <c-card *ngFor="let sample of samplePrompts.slice(0, 5)" class="mb-3 sample-prompt-card devsecops-card">
+          <c-card *ngFor="let sample of samplePrompts.slice(0, 5)" class="mb-3 sample-prompt-card devops-card">
             <c-card-header>
               <strong>{{ sample.title }}</strong>
             </c-card-header>

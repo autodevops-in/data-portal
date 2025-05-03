@@ -8,7 +8,7 @@
 }
 
 @mixin tips-content-style($color, $bg-color) {
-  background-color: $bg-color;
+  background-color: var(--cui-card-bg, $bg-color);
   padding: 1rem;
   border-radius: 0 0 4px 4px;
   border-left: 4px solid $color;
@@ -17,17 +17,16 @@
 
 @mixin text-info-style($color, $bg-color) {
   font-size: 0.9rem;
-  color: $color;
-  background-color: $bg-color;
+  color: var(--cui-secondary, $color);
+  background-color: var(--cui-secondary-bg-subtle, $bg-color);
   padding: 0.75rem;
   border-radius: 4px;
-  border-left: 3px solid $color;
+  border-left: 3px solid var(--cui-secondary, $color);
 }
 
 // Variables
-$devsecops-color: #20a8d8;
-$devops-color: #4dbd74;
-$info-bg-color: rgba(32, 168, 216, 0.05);
+$devops-color: var(--cui-secondary, #6c757d); // Using CoreUI secondary color for grayish theme
+$info-bg-color: rgba(108, 117, 125, 0.05);
 $card-bg-color: var(--cui-card-bg, #f8f9fa);
 
 .code-container {
@@ -90,24 +89,19 @@ textarea {
   }
 }
 
-.devsecops-card {
-  @include card-border($devsecops-color);
-
-  c-card-header {
-    @include card-header-bg($devsecops-color);
-  }
-}
+/* Removed devsecops-card class as it's no longer needed */
 
 .devops-card {
   @include card-border($devops-color);
 
   c-card-header {
-    @include card-header-bg($devops-color);
+    background-color: var(--cui-secondary-bg-subtle, rgba(108, 117, 125, 0.1));
+    color: var(--cui-body-color);
   }
 }
 
 .tips-content {
-  @include tips-content-style($devsecops-color, $card-bg-color);
+  @include tips-content-style($devops-color, $card-bg-color);
 
   ul {
     padding-left: 1.5rem;
@@ -118,24 +112,26 @@ textarea {
   }
 
   p.text-info {
-    @include text-info-style(var(--cui-info, $devsecops-color), var(--cui-info-bg-subtle, $info-bg-color));
+    @include text-info-style(var(--cui-info, $devops-color), var(--cui-info-bg-subtle, $info-bg-color));
   }
 }
 
-c-accordion-item {
-  border: 1px solid var(--cui-border-color, #dee2e6);
-  border-radius: 4px;
-  overflow: hidden;
+.tips-card {
+  border-left: 4px solid $devops-color;
+  transition: box-shadow 0.3s ease;
+  
+  &:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
 }
 
-::ng-deep .accordion-button {
-  background-color: var(--cui-card-cap-bg, rgba(32, 168, 216, 0.1));
-  color: var(--cui-body-color);
-  font-weight: 500;
-
-  &:not(.collapsed) {
-    background-color: var(--cui-primary-bg-subtle, rgba(32, 168, 216, 0.2));
-    color: var(--cui-body-color);
+.tips-header-container {
+  background-color: var(--cui-secondary-bg-subtle, rgba(108, 117, 125, 0.1));
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  
+  &:hover {
+    background-color: var(--cui-secondary-bg-subtle, rgba(108, 117, 125, 0.2));
   }
 }
 
@@ -154,8 +150,16 @@ c-accordion-item {
     color: var(--cui-emphasis-color);
   }
 
-  ::ng-deep .accordion-button {
-    color: var(--cui-body-color);
+  .tips-card {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    
+    &:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  .tips-header-container {
+    border-bottom: 1px solid var(--cui-border-color);
   }
 
   .tips-header {
@@ -164,5 +168,13 @@ c-accordion-item {
 
   .tips-subheader {
     color: var(--cui-secondary, #6c757d) !important;
+  }
+  
+  .sample-prompt-card {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    
+    &:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
   }
 }

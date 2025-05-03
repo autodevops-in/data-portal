@@ -12,6 +12,7 @@ import {
   AlertModule,
   SpinnerModule,
   AccordionModule,
+  AccordionButtonDirective,
   AvatarModule
 } from '@coreui/angular';
 
@@ -31,6 +32,7 @@ import {
     AlertModule,
     SpinnerModule,
     AccordionModule,
+    AccordionButtonDirective,
     AvatarModule
   ]
 })
@@ -41,51 +43,10 @@ export class AiCodeGeneratorComponent implements OnInit {
   errorMessage: string = '';
   isAuthenticated: boolean = false;
   userProfile: any = null;
+  showTips: boolean = false;
 
-  // Sample prompts focused on DevOps and DevSecOps
+  // Sample prompts focused only on DevOps
   samplePrompts: { title: string; prompt: string }[] = [
-    // DevSecOps Prompts
-    {
-      title: 'Secure CI/CD Pipeline',
-      prompt: 'Create a GitHub Actions workflow that includes security scanning steps for a Node.js application. Include SAST with SonarQube, dependency scanning with OWASP Dependency Check, container scanning with Trivy, and secret scanning with GitLeaks.'
-    },
-    {
-      title: 'Infrastructure as Code Security',
-      prompt: 'Write Terraform code to provision an AWS infrastructure with security best practices. Include a VPC with private/public subnets, security groups with least privilege access, KMS encryption for S3 buckets, and AWS WAF configuration for an Application Load Balancer.'
-    },
-    {
-      title: 'Kubernetes Security Policy',
-      prompt: 'Create a Kubernetes Pod Security Policy (PSP) that enforces security best practices. Include restrictions on privileged containers, host namespace sharing, volume types, and user/group IDs. Also add NetworkPolicy resources to restrict pod-to-pod communication.'
-    },
-    {
-      title: 'Docker Security Hardening',
-      prompt: 'Write a Dockerfile for a Node.js application that follows security best practices. Include using a minimal base image, non-root user, multi-stage builds, removal of unnecessary tools, and proper handling of secrets.'
-    },
-    {
-      title: 'Security Compliance Checks',
-      prompt: 'Create an Ansible playbook that performs CIS benchmark compliance checks on Linux servers. Include checks for file permissions, user access, network configuration, and system hardening. Generate a compliance report in JSON format.'
-    },
-    {
-      title: 'Automated Security Testing',
-      prompt: 'Write a Python script that automates security testing for a web application. Include OWASP ZAP for vulnerability scanning, Selenium for authentication testing, and API security testing with custom headers and payloads.'
-    },
-    {
-      title: 'AWS Security Monitoring',
-      prompt: 'Create a CloudFormation template that sets up AWS security monitoring. Include CloudTrail for API logging, Config for compliance monitoring, GuardDuty for threat detection, and Security Hub for centralized security management.'
-    },
-    {
-      title: 'Secret Management',
-      prompt: 'Write a Bash script that integrates HashiCorp Vault with a CI/CD pipeline. Include authentication, secret retrieval, dynamic credential generation, and proper error handling for a secure deployment process.'
-    },
-    {
-      title: 'Container Runtime Security',
-      prompt: 'Create a Falco configuration file with custom rules to detect suspicious activities in a Kubernetes cluster. Include rules for detecting privilege escalation, unusual network connections, and unauthorized file access.'
-    },
-    {
-      title: 'Compliance as Code',
-      prompt: 'Write an InSpec profile that checks compliance with NIST 800-53 security controls for a Linux server. Include tests for access control, audit logging, encryption, and network security.'
-    },
-
     // DevOps Prompts
     {
       title: 'Kubernetes Deployment',
@@ -143,8 +104,15 @@ export class AiCodeGeneratorComponent implements OnInit {
         this.auth.user$.subscribe(user => {
           this.userProfile = user;
         });
+        
+        // Show tips by default
+        this.showTips = true;
       }
     });
+  }
+  
+  toggleTips(): void {
+    this.showTips = !this.showTips;
   }
 
   generateCode(): void {
