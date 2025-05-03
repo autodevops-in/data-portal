@@ -108,15 +108,8 @@
                 />
               </div>
 
-              <div class="mb-3">
-                <label cLabel for="picture">Profile Picture URL</label>
-                <input cFormControl
-                  id="picture"
-                  formControlName="picture"
-                  placeholder="https://example.com/your-picture.jpg"
-                  type="url"
-                />
-              </div>
+              <!-- Profile Picture URL field is hidden but still part of the form -->
+              <input type="hidden" formControlName="picture" />
 
               <div formGroupName="user_metadata">
                 <h5 class="mt-4 mb-3">Preferences</h5>

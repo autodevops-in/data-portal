@@ -1,0 +1,972 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+		"name": "AutoDevOps Metrics API",
+		"description": "Collection for testing the AutoDevOps Metrics API endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Public Endpoints",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"health"
+							]
+						},
+						"description": "Check the health status of the API"
+					},
+					"response": []
+				},
+				{
+					"name": "Home",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								""
+							]
+						},
+						"description": "Home endpoint"
+					},
+					"response": []
+				},
+				{
+					"name": "Public Route",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/public",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"public"
+							]
+						},
+						"description": "Public route that doesn't require authentication"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints that don't require authentication"
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Get Token Info",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/auth/token-info",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"token-info"
+							]
+						},
+						"description": "Get information about the current user's token"
+					},
+					"response": []
+				},
+				{
+					"name": "Exchange Token",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/auth/exchange-token",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"exchange-token"
+							]
+						},
+						"description": "Exchange the current token for one with the update:profile scope"
+					},
+					"response": []
+				},
+				{
+					"name": "Private Route",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/private",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"private"
+							]
+						},
+						"description": "Private route that requires authentication"
+					},
+					"response": []
+				}
+			],
+			"description": "Authentication-related endpoints"
+		},
+		{
+			"name": "User Profile",
+			"item": [
+				{
+					"name": "Update User Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"given_name\": \"John\",\n    \"family_name\": \"Doe\",\n    \"nickname\": \"johndoe\",\n    \"user_metadata\": {\n        \"preferred_color\": \"blue\",\n        \"preferred_language\": \"en\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users/profile",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"profile"
+							]
+						},
+						"description": "Update the authenticated user's profile in Auth0"
+					},
+					"response": []
+				}
+			],
+			"description": "User profile management endpoints"
+		},
+		{
+			"name": "Items",
+			"item": [
+				{
+					"name": "Get Items",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/items",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"items"
+							]
+						},
+						"description": "Get all items"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Item",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Test Item\",\n    \"description\": \"This is a test item\",\n    \"price\": 19.99\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/items",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"items"
+							]
+						},
+						"description": "Create a new item"
+					},
+					"response": []
+				}
+			],
+			"description": "Item management endpoints"
+		},
+		{
+			"name": "Pipelines",
+			"item": [
+				{
+					"name": "List Pipelines",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/pipelines",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"pipelines"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "active",
+									"description": "Filter by status",
+									"disabled": true
+								},
+								{
+									"key": "source_type",
+									"value": "postgres",
+									"description": "Filter by source type",
+									"disabled": true
+								},
+								{
+									"key": "destination_type",
+									"value": "s3",
+									"description": "Filter by destination type",
+									"disabled": true
+								}
+							]
+						},
+						"description": "List all pipelines with optional filtering"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Pipeline",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/pipelines/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"pipelines",
+								"1"
+							]
+						},
+						"description": "Get details of a specific pipeline by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Pipeline",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Daily Sales Data\",\n    \"description\": \"Pipeline to process daily sales data\",\n    \"status\": \"active\",\n    \"source_type\": \"postgres\",\n    \"source_config\": {\n        \"table\": \"sales\",\n        \"query\": \"SELECT * FROM sales WHERE date = CURRENT_DATE\"\n    },\n    \"destination_type\": \"s3\",\n    \"destination_config\": {\n        \"bucket\": \"data-portal-processed\",\n        \"prefix\": \"sales/daily/\"\n    },\n    \"schedule\": \"0 0 * * *\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/pipelines",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"pipelines"
+							]
+						},
+						"description": "Create a new pipeline"
+					},
+					"response": []
+				}
+			],
+			"description": "Pipeline management endpoints"
+		},
+		{
+			"name": "Azure DevOps",
+			"item": [
+				{
+					"name": "Projects",
+					"item": [
+						{
+							"name": "List Projects",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/azure-devops/projects",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"azure-devops",
+										"projects"
+									]
+								},
+								"description": "List all projects in the Azure DevOps organization"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Project",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/azure-devops/projects/{{project_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"azure-devops",
+										"projects",
+										"{{project_id}}"
+									]
+								},
+								"description": "Get details of a specific Azure DevOps project"
+							},
+							"response": []
+						}
+					],
+					"description": "Azure DevOps Projects endpoints"
+				},
+				{
+					"name": "Repositories",
+					"item": [
+						{
+							"name": "List Repositories",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/azure-devops/repositories?project_id={{project_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"azure-devops",
+										"repositories"
+									],
+									"query": [
+										{
+											"key": "project_id",
+											"value": "{{project_id}}",
+											"description": "The ID or name of the project"
+										}
+									]
+								},
+								"description": "List all repositories in an Azure DevOps project"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Repository",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/azure-devops/repositories/{{repository_id}}?project_id={{project_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"azure-devops",
+										"repositories",
+										"{{repository_id}}"
+									],
+									"query": [
+										{
+											"key": "project_id",
+											"value": "{{project_id}}",
+											"description": "The ID or name of the project"
+										}
+									]
+								},
+								"description": "Get details of a specific Azure DevOps repository"
+							},
+							"response": []
+						},
+						{
+							"name": "List Branches",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/azure-devops/repositories/{{repository_id}}/branches?project_id={{project_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"azure-devops",
+										"repositories",
+										"{{repository_id}}",
+										"branches"
+									],
+									"query": [
+										{
+											"key": "project_id",
+											"value": "{{project_id}}",
+											"description": "The ID or name of the project"
+										}
+									]
+								},
+								"description": "List all branches in an Azure DevOps repository"
+							},
+							"response": []
+						}
+					],
+					"description": "Azure DevOps Repositories endpoints"
+				},
+				{
+					"name": "Pipelines",
+					"item": [
+						{
+							"name": "List Pipelines",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/azure-devops/pipelines?project_id={{project_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"azure-devops",
+										"pipelines"
+									],
+									"query": [
+										{
+											"key": "project_id",
+											"value": "{{project_id}}",
+											"description": "The ID or name of the project"
+										}
+									]
+								},
+								"description": "List all pipelines in an Azure DevOps project"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Pipeline",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/azure-devops/pipelines/{{pipeline_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"azure-devops",
+										"pipelines",
+										"{{pipeline_id}}"
+									]
+								},
+								"description": "Get details of a specific Azure DevOps pipeline"
+							},
+							"response": []
+						},
+						{
+							"name": "Create Pipeline",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"New Data Pipeline\",\n    \"project_id\": \"{{project_id}}\",\n    \"repository_id\": \"{{repository_id}}\",\n    \"yaml_path\": \"/azure-pipelines.yml\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/azure-devops/pipelines",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"azure-devops",
+										"pipelines"
+									]
+								},
+								"description": "Create a new pipeline in Azure DevOps"
+							},
+							"response": []
+						},
+						{
+							"name": "Run Pipeline",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"pipeline_id\": {{pipeline_id}},\n    \"parameters\": {\n        \"environment\": \"dev\",\n        \"deploy\": true\n    },\n    \"source_branch\": \"refs/heads/main\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/azure-devops/pipelines/run",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"azure-devops",
+										"pipelines",
+										"run"
+									]
+								},
+								"description": "Run an Azure DevOps pipeline"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Pipeline Run",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/azure-devops/pipelines/{{pipeline_id}}/runs/{{run_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"azure-devops",
+										"pipelines",
+										"{{pipeline_id}}",
+										"runs",
+										"{{run_id}}"
+									]
+								},
+								"description": "Get details of a specific Azure DevOps pipeline run"
+							},
+							"response": []
+						},
+						{
+							"name": "Cancel Pipeline Run",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/azure-devops/pipelines/{{pipeline_id}}/runs/{{run_id}}/cancel",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"azure-devops",
+										"pipelines",
+										"{{pipeline_id}}",
+										"runs",
+										"{{run_id}}",
+										"cancel"
+									]
+								},
+								"description": "Cancel a running Azure DevOps pipeline"
+							},
+							"response": []
+						}
+					],
+					"description": "Azure DevOps Pipelines endpoints"
+				},
+				{
+					"name": "Pipeline Integration",
+					"item": [
+						{
+							"name": "Set Pipeline Azure DevOps Config",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"azure_pipeline_id\": {{azure_pipeline_id}},\n    \"parameters_mapping\": {\n        \"source_table\": \"sourceTable\",\n        \"destination_bucket\": \"destBucket\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/pipelines/{{pipeline_id}}/azure-devops-config",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"pipelines",
+										"{{pipeline_id}}",
+										"azure-devops-config"
+									]
+								},
+								"description": "Configure Azure DevOps integration for a pipeline"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Pipeline Azure DevOps Config",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/pipelines/{{pipeline_id}}/azure-devops-config",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"pipelines",
+										"{{pipeline_id}}",
+										"azure-devops-config"
+									]
+								},
+								"description": "Get Azure DevOps configuration for a pipeline"
+							},
+							"response": []
+						},
+						{
+							"name": "Run Pipeline in Azure DevOps",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"custom_param1\": \"value1\",\n    \"custom_param2\": \"value2\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/pipelines/{{pipeline_id}}/run-in-azure-devops",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"pipelines",
+										"{{pipeline_id}}",
+										"run-in-azure-devops"
+									]
+								},
+								"description": "Run a Data Portal pipeline in Azure DevOps"
+							},
+							"response": []
+						}
+					],
+					"description": "Data Portal Pipeline to Azure DevOps integration endpoints"
+				}
+			],
+			"description": "Azure DevOps integration endpoints"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string",
+			"description": "Base URL for the API"
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string",
+			"description": "JWT access token from Auth0"
+		}
+	]
+}

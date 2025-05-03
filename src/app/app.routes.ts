@@ -4,7 +4,7 @@ import { AuthGuard } from '@auth0/auth0-angular';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'projects',
+    redirectTo: 'ai-code-generator',
     pathMatch: 'full'
   },
   {
@@ -85,6 +85,14 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
       },
       {
+        path: 'azure-devops-pipelines',
+        loadChildren: () => import('./views/azure-devops/index').then((m) => m.AzureDevOpsModule),
+        canActivate: [AuthGuard],
+        data: {
+          title: 'Azure DevOps Pipelines'
+        }
+      },
+      {
         path: 'pipelines',
         loadChildren: () => import('./views/pipelines/routes').then((m) => m.routes),
         canActivate: [AuthGuard]
@@ -105,5 +113,5 @@ export const routes: Routes = [
       title: 'Page 500'
     }
   },
-  { path: '**', redirectTo: 'projects' }
+  { path: '**', redirectTo: 'ai-code-generator' }
 ];

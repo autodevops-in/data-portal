@@ -1,0 +1,42 @@
+.code-block {
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 15px;
+  max-height: 400px;
+  overflow-y: auto;
+  font-family: monospace;
+}
+
+.form-actions {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.spinner-border {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
+}
+
+.badge {
+  padding: 0.5em 0.75em;
+}
+
+.badge-success {
+  background-color: #2eb85c;
+}
+
+.badge-danger {
+  background-color: #e55353;
+}
+
+.badge-warning {
+  background-color: #f9b115;
+  color: #333;
+}
+
+.badge-secondary {
+  background-color: #ced2d8;
+  color: #333;
+}

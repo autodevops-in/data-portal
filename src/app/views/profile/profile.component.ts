@@ -293,7 +293,7 @@ export class ProfileComponent implements OnInit {
         family_name: formValues.family_name,
         nickname: formValues.nickname,
         name: fullName,
-        picture: formValues.picture,
+        picture: this.userProfile?.picture || formValues.picture, // Use existing picture URL
         user_metadata: formValues.user_metadata,
         user_id: this.userProfile?.sub || '' // Include the user ID from Auth0
       };

@@ -78,8 +78,10 @@ export class DefaultLayoutComponent implements OnInit {
   updateNavItems(): void {
     // Filter navigation items based on permissions
     this.navItems = navItems.filter(item => {
-      // Always show Projects and AI Code Generator
-      if (item.name === 'Projects' || item.name === 'AI Code Generator') {
+      // Always show Projects, AI Code Generator, and Azure DevOps Pipelines
+      if (item.name === 'Projects' || 
+          item.name === 'AI Code Generator' || 
+          item.name === 'Azure DevOps Pipelines') {
         return true;
       }
 

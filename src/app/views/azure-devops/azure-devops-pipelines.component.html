@@ -1,0 +1,168 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <strong>Azure DevOps Pipelines</strong>
+          <small> - AI Generated</small>
+        </div>
+        <div class="card-body">
+          <div *ngIf="errorMessage" class="alert alert-danger">
+            {{ errorMessage }}
+          </div>
+          <div *ngIf="successMessage" class="alert alert-success">
+            {{ successMessage }}
+          </div>
+
+          <form [formGroup]="pipelineForm" (ngSubmit)="generatePipeline()">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="projectId">Project</label>
+                  <select 
+                    class="form-control" 
+                    id="projectId" 
+                    formControlName="projectId"
+                    (change)="onProjectChange(pipelineForm.get('projectId')?.value)"
+                    [class.is-invalid]="pipelineForm.get('projectId')?.invalid && pipelineForm.get('projectId')?.touched">
+                    <option value="">Select a project</option>
+                    <option *ngFor="let project of projects" [value]="project.id">{{ project.name }}</option>
+                  </select>
+                  <div *ngIf="isProjectsLoading" class="mt-2">
+                    <div class="spinner-border spinner-border-sm text-primary" role="status">
+                      <!-- <span class="sr-only">Loading...</span> -->
+                    </div>
+                    <span class="ml-2">Loading projects</span>
+                  </div>
+                  <div *ngIf="pipelineForm.get('projectId')?.invalid && pipelineForm.get('projectId')?.touched" class="invalid-feedback">
+                    Project is required
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="repositoryId">Repository</label>
+                  <select 
+                    class="form-control" 
+                    id="repositoryId" 
+                    formControlName="repositoryId"
+                    (change)="onRepositoryChange(pipelineForm.get('repositoryId')?.value)"
+                    [class.is-invalid]="pipelineForm.get('repositoryId')?.invalid && pipelineForm.get('repositoryId')?.touched"
+                    [disabled]="!pipelineForm.get('projectId')?.value">
+                    <option value="">Select a repository</option>
+                    <option *ngFor="let repo of repositories" [value]="repo.id">{{ repo.name }}</option>
+                  </select>
+                  <div *ngIf="isRepositoriesLoading" class="mt-2">
+                    <div class="spinner-border spinner-border-sm text-primary" role="status">
+                      <!-- <span class="sr-only">Loading</span> -->
+                    </div>
+                    <span class="ml-2">Loading repositories</span>
+                  </div>
+                  <div *ngIf="pipelineForm.get('repositoryId')?.invalid && pipelineForm.get('repositoryId')?.touched" class="invalid-feedback">
+                    Repository is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="prompt">Describe the pipeline you want to create</label>
+              <textarea 
+                class="form-control" 
+                id="prompt" 
+                rows="4" 
+                formControlName="prompt"
+                placeholder="Example: Create a CI/CD pipeline for a .NET Core application that builds, tests, and deploys to Azure App Service"
+                [class.is-invalid]="pipelineForm.get('prompt')?.invalid && pipelineForm.get('prompt')?.touched"></textarea>
+              <div *ngIf="pipelineForm.get('prompt')?.invalid && pipelineForm.get('prompt')?.touched" class="invalid-feedback">
+                Please provide a description of the pipeline
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary mr-2" [disabled]="isGenerating || pipelineForm.invalid">
+                <span *ngIf="isGenerating" class="spinner-border spinner-border-sm mr-1" role="status" aria-hidden="true"></span>
+                {{ isGenerating ? 'Generating' : 'Generate Pipeline' }}
+              </button>
+              <button type="button" class="btn btn-secondary" (click)="clearForm()">Clear</button>
+            </div>
+          </form>
+
+          <div *ngIf="generatedPipeline" class="mt-4">
+            <div class="card">
+              <div class="card-header">
+                <strong>Generated Pipeline</strong>
+              </div>
+              <div class="card-body">
+                <h5>{{ generatedPipeline.name }}</h5>
+                <p>{{ generatedPipeline.description }}</p>
+                
+                <div class="form-group">
+                  <label>Pipeline YAML</label>
+                  <pre class="code-block"><code>{{ displayPipelineContent() }}</code></pre>
+                </div>
+                
+                <div class="btn-group mb-3">
+                  <button type="button" class="btn btn-primary mr-2" (click)="downloadPipelineYaml()">
+                    <i class="fa fa-download"></i> Download YAML
+                  </button>
+                  <button type="button" class="btn btn-success" (click)="createPipeline()" [disabled]="isLoading">
+                    <span *ngIf="isLoading" class="spinner-border spinner-border-sm mr-1" role="status" aria-hidden="true"></span>
+                    {{ isLoading ? 'Creating' : 'Create Pipeline in Azure DevOps' }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="pipelines.length > 0" class="mt-4">
+            <div class="card">
+              <div class="card-header">
+                <strong>Existing Pipelines</strong>
+              </div>
+              <div class="card-body">
+                <div *ngIf="isPipelinesLoading" class="text-center">
+                  <div class="spinner-border text-primary" role="status">
+                    <span class="sr-only">Loading</span>
+                  </div>
+                  <p>Loading pipelines</p>
+                </div>
+                <table class="table table-striped" *ngIf="!isPipelinesLoading">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Status</th>
+                      <th>Last Run</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let pipeline of pipelines">
+                      <td>{{ pipeline.name }}</td>
+                      <td>
+                        <span class="badge" [ngClass]="{
+                          'badge-success': pipeline.status === 'succeeded',
+                          'badge-danger': pipeline.status === 'failed',
+                          'badge-warning': pipeline.status === 'inProgress',
+                          'badge-secondary': !pipeline.status
+                        }">
+                          {{ pipeline.status || 'Not run' }}
+                        </span>
+                      </td>
+                      <td>{{ formatLastRunDate(pipeline) }}</td>
+                      <td>
+                        <button class="btn btn-sm btn-primary mr-1">Run</button>
+                        <button class="btn btn-sm btn-info mr-1">View</button>
+                        <button class="btn btn-sm btn-danger">Delete</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
