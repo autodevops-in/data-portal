@@ -23,15 +23,15 @@ export class ApiServiceService {
   }
 
   updateUserProfile(profileData: any): Observable<any> {
-    return this.http.patch<any>(`${this.apiUrl}/api/users/profile`, profileData, { headers: this.headers });
+    return this.http.patch<any>(`${this.apiUrl}/api/auth/users/profile`, profileData, { headers: this.headers });
   }
 
   createUserProfile(profileData: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/api/users/profile`, profileData, { headers: this.headers });
+    return this.http.post<any>(`${this.apiUrl}/api/auth/sers/profile`, profileData, { headers: this.headers });
   }
 
   getUserProfile(userId: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/api/users/profile/${userId}`, { headers: this.headers });
+    return this.http.get<any>(`${this.apiUrl}/api/auth/users/profile/${userId}`, { headers: this.headers });
   }
 
   // DevOps Metrics API Endpoints
